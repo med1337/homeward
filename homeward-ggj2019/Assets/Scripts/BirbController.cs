@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class BirbController : MonoBehaviour
 {
-    public float EdgeDistance = 5.5f;
+    public float EdgeDistance = 5;
+    public float TurnRotation = 30;
+    public int Responsiveness = 2;
     int forceApplied = 0; 
     int moveForce = 0;
     int prevMoveForce = 0;
@@ -23,15 +25,15 @@ public class BirbController : MonoBehaviour
 
         //Slowly increment towards target velocity
         if (forceApplied < moveForce)
-            moveForce -= 1;
+            moveForce -= Responsiveness;
         if (forceApplied > moveForce)
-            moveForce += 1;
+            moveForce += Responsiveness;
 
         //Rotate dependent on direction
         if (moveForce > 10)
-            targetAngle = new Vector3(0, 0, -30);
+            targetAngle = new Vector3(0, 0, -TurnRotation);
         else if (moveForce < -10)
-            targetAngle = new Vector3(0, 0, 30);
+            targetAngle = new Vector3(0, 0, TurnRotation);
         else
             targetAngle = new Vector3(0, 0, 0);
 
@@ -42,19 +44,19 @@ public class BirbController : MonoBehaviour
         transform.eulerAngles = currentAngle;
 
         //Cap movement at edges
-        if (transform.position.x < 5)
-            moveForce += 2;
-        if (transform.position.x > -5)
-            moveForce -= 2;
+        if (transform.position.x < EdgeDistance)
+            moveForce += Responsiveness*2;
+        if (transform.position.x > -EdgeDistance)
+            moveForce -= Responsiveness*2;
 
         //Apply updated velocity
         GetComponent<Rigidbody>().velocity = new Vector3(moveForce/10, 0, 10);
 
         //Debug log velocity 
-        if (moveForce != prevMoveForce)
-        {
-            Debug.Log(moveForce);
-            prevMoveForce = moveForce; 
-        }
+        //if (moveForce != prevMoveForce)
+        //{
+        //    Debug.Log(moveForce);
+        //    prevMoveForce = moveForce; 
+        //}
     }
 }
