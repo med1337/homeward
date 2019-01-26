@@ -13,6 +13,8 @@ public class FlockMember : MonoBehaviour
 
     [SerializeField] GameObject deathExplosionPrefab;
 
+    private bool invunerable = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -39,48 +41,57 @@ public class FlockMember : MonoBehaviour
                 transform.rotation = manager.leader.transform.rotation;
 
             }
+        }       
+
+        float speed = rigid.velocity.magnitude / 10.0f;
+
+        if (speed > 1)
+        {
+            speed *= 5.0f;
         }
-       
 
-            float speed = rigid.velocity.magnitude / 10.0f;
-
-            if (speed > 1)
-            {
-                speed *= 5.0f;
-            }
-
-            float animSpeed = speed;
-            anim.speed = animSpeed;
+        float animSpeed = speed;
+        anim.speed = animSpeed;
         
     }
 
     void OnCollisionEnter(Collision col)
     {
-        if (!col.transform.GetComponent<FlockMember>())
+        if (!invunerable)
         {
-            Instantiate(deathExplosionPrefab, transform.position, transform.rotation);
-
-            BirdController controller = GetComponent<BirdController>();
-
-            if (controller.enabled)
+            if (col.transform.GetComponent<Wind>())
             {
-                controller.enabled = false;
-                manager.UpdateLeader();
+                manager.EnableBoost();
+                Destroy(col.gameObject);
+                return;
             }
 
-            if (manager)
+            if (!col.transform.GetComponent<FlockMember>())
             {
-                manager.RemoveFlockMember(this.gameObject);
-            }
+                Instantiate(deathExplosionPrefab, transform.position, transform.rotation);
 
-            Destroy(this.gameObject);
-        }
-        else
-        {
-            FlockMember brd = col.transform.GetComponent<FlockMember>();
-            if (!brd.GetManager())
+                BirdController controller = GetComponent<BirdController>();
+
+                if (controller.enabled)
+                {
+                    controller.enabled = false;
+                    manager.UpdateLeader();
+                }
+
+                if (manager)
+                {
+                    manager.RemoveFlockMember(this.gameObject);
+                }
+
+                Destroy(this.gameObject);
+            }
+            else
             {
-                brd.AddToFlock(manager);
+                FlockMember brd = col.transform.GetComponent<FlockMember>();
+                if (!brd.GetManager())
+                {
+                    brd.AddToFlock(manager);
+                }
             }
         }
     }
@@ -108,5 +119,9 @@ public class FlockMember : MonoBehaviour
     {
         manager = _manager;
         manager.AddNewFlockMember(this.gameObject);
+    }
+    public void SetInvunerable(bool _in)
+    {
+        invunerable = _in;
     }
 }
