@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class FoliageSpawner : MonoBehaviour
 {
@@ -23,12 +25,12 @@ public class FoliageSpawner : MonoBehaviour
     {
         if (spawnTrees)
         {
-            //StartCoroutine(SpawnMaximumTrees());
+            StartCoroutine(SpawnMaximumTrees());
         }
 
         if (spawnHills)
         {
-            StartCoroutine(SpawnFieldCR());
+           // StartCoroutine(SpawnFieldCR());
         }
     }
 
@@ -110,7 +112,7 @@ public class FoliageSpawner : MonoBehaviour
         stop = false;
         while (!stop)
         {
-            if (counter > 25)
+            if (counter > 5)
             {
                 StartCoroutine(SpawnGrass());
                 yield break;
@@ -160,6 +162,7 @@ public class FoliageSpawner : MonoBehaviour
 
     }
 
+   
 
     IEnumerator Spawn(GameObject prefab)
     {
@@ -169,7 +172,7 @@ public class FoliageSpawner : MonoBehaviour
         var readyToSpawn = true;
         var position = Vector3.zero;
         readyToSpawn = true;
-        var newX = Random.Range(bounds.min.x , bounds.max.x);
+        var newX = Random.Range(bounds.min.x, bounds.max.x );
         var newZ = Random.Range(bounds.min.z, bounds.max.z);
         var newY = bounds.max.y * 2;
 
@@ -178,10 +181,10 @@ public class FoliageSpawner : MonoBehaviour
         position = collider.ClosestPoint(position);
 
         //RaycastHit[] hits = Physics.BoxCastAll(position, objbounds, Vector3.one);
-        RaycastHit[] hits = Physics.SphereCastAll(new Ray(position, new Vector3(1, 1, 1)), 1.5f);
+        RaycastHit[] hits = Physics.SphereCastAll(new Ray(position, new Vector3(1, 1, 1)), 0.5f);
         foreach (var item in hits)
         {
-            if (item.collider.gameObject.layer == LayerMask.NameToLayer("SpawnedObject"))
+            if (item.collider.gameObject.layer == prefab.gameObject.layer)
             {
                 readyToSpawn = false;
                 counter++;
@@ -190,21 +193,23 @@ public class FoliageSpawner : MonoBehaviour
 
         }
 
-        Ray ray = new Ray(position+Vector3.up*10,Vector3.down);
-        RaycastHit hit = new RaycastHit();
+        //Ray ray = new Ray(position+Vector3.up*1000,Vector3.down);
+        //RaycastHit hit = new RaycastHit();
         
-        if(Physics.Raycast(ray,out hit))
-        {
-            position = hit.point - Vector3.up*0.2f;
-        }
+        //if(Physics.Raycast(ray,out hit))
+        //{
+        //    if(!hit.collider.isTrigger)
+        //        position = hit.point - Vector3.up*0.2f;
+        //}
 
 
 
-        var go = Instantiate(prefab, transform);
-        yield return new WaitForEndOfFrame();
+        var go = Instantiate(prefab, transform.GetChild(0));
         go.transform.position = position;
         var randomY = Random.Range(0f, 180f);
         go.transform.Rotate(Vector3.up,randomY);
+        yield return new WaitForEndOfFrame();
+        //go.transform.localScale = go.transform.localScale * Random.Range(0.6f, 1.6f);
         //if (currentTile)
         //    go.GetComponent<SpawnedObject>().audioSource = currentTile.audioSource;
         //go.GetComponent<SpawnedObject>().PlaySound();
@@ -213,4 +218,26 @@ public class FoliageSpawner : MonoBehaviour
         trees.Add(go);
         //go.transform.SetParent(transform);
     }
+
+
+    public void DestroyTile(Transform _transform)
+    {
+        StartCoroutine(WaitForDistance(_transform));
+    }
+
+
+    private IEnumerator WaitForDistance(Transform _transform)
+    {
+        var timer = Time.time;
+        var distance = Vector3.Distance(_transform.position, transform.position);
+        while (distance < 25f)
+        {
+            distance = Vector3.Distance(_transform.position, transform.position);
+            yield return null;
+        }
+        Debug.Log(Time.time - timer);
+        
+        Destroy(gameObject);
+    }
+
 }

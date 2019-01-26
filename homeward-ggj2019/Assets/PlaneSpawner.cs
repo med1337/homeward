@@ -14,7 +14,7 @@ public class PlaneSpawner : MonoBehaviour
     {
         gameObjects = new List<GameObject>();
         StartCoroutine(SpawnTiles());
-        StartCoroutine(DestroyTiles());
+        //StartCoroutine(DestroyTiles());
     }
 
 
@@ -24,7 +24,7 @@ public class PlaneSpawner : MonoBehaviour
         while (true)
         {
             DestroyTile();
-            yield return new WaitForSeconds(.25f);
+            yield return new WaitForSeconds(1f);
         }
     }
 
@@ -49,7 +49,10 @@ public class PlaneSpawner : MonoBehaviour
         while (true)
         {
             SpawnTile();
-            yield return new WaitForSeconds(.25f);
+            if (counter < 10)
+                yield return null;
+            else
+                yield return new WaitForSeconds(1.25f);
         }
     }
 
@@ -57,7 +60,7 @@ public class PlaneSpawner : MonoBehaviour
     {
         var go = GameObject.Instantiate(tilePrefab, transform);
         gameObjects.Add(go);
-            go.transform.position += transform.forward * 10f * counter;
+        go.transform.position += transform.forward * 10f *tilePrefab.transform.localScale.z* counter;
         counter++;
 
 
