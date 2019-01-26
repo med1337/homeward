@@ -49,6 +49,9 @@ public class FoliageSpawner : MonoBehaviour
             case BiomeType.LAKE:
                 GetComponentInChildren<MeshRenderer>().material = temporaryHackSolutionMaterial;
                 break;
+            case BiomeType.CITY:
+                StartCoroutine(SpawnBuildingCR());
+                break;
         }
     }
 
