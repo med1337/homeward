@@ -47,7 +47,7 @@ public class FlockMember : MonoBehaviour
 
             float animSpeed = speed;
             anim.speed = animSpeed;
-        }
+        
     }
 
     void OnCollisionEnter(Collision col)
