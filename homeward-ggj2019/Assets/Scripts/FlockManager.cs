@@ -121,4 +121,15 @@ public class FlockManager : MonoBehaviour
             positionOffsets[i] = offset;
         }
     }
+
+    public void RemoveFlockMember(GameObject _bird)
+    {
+        for (int i = 0; i < flockMembers.Count; i++)
+        {
+            if (flockMembers[i] == _bird)
+            {
+                flockMembers.RemoveAt(i);
+            }
+        }
+    }
 }
