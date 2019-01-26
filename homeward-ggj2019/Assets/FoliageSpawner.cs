@@ -6,6 +6,7 @@ using Random = UnityEngine.Random;
 
 public class FoliageSpawner : MonoBehaviour
 {
+    [SerializeField] private Material temporaryHackSolutionMaterial;
     [SerializeField] private List<Transform> raycastPoints = new List<Transform>();
     [SerializeField] private MeshCollider collider;
     [SerializeField] private List<GameObject> buildingPrefabs;
@@ -23,14 +24,30 @@ public class FoliageSpawner : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        if (spawnTrees)
-        {
-            StartCoroutine(SpawnMaximumTrees());
-        }
+        //if (spawnTrees)
+        //{
+        //    StartCoroutine(SpawnMaximumTrees());
+        //}
 
-        if (spawnHills)
+        //if (spawnHills)
+        //{
+        //   // StartCoroutine(SpawnFieldCR());
+        //}
+    }
+
+
+    public void Init(BiomeType type)
+    {
+        switch (type)
         {
-           // StartCoroutine(SpawnFieldCR());
+            case BiomeType.NONE:
+                break;
+            case BiomeType.MODERATE:
+                StartCoroutine(SpawnMaximumTrees());
+                break;
+            case BiomeType.LAKE:
+                GetComponentInChildren<MeshRenderer>().material = temporaryHackSolutionMaterial;
+                break;
         }
     }
 
@@ -206,13 +223,13 @@ public class FoliageSpawner : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        //todo: collision layer
-        Debug.Log(other.gameObject.name);
-        var comp = other.GetComponent<Camera>();
-        if (comp)
-        {
-            DestroyTile(comp.transform);
-        }
+        ////todo: collision layer
+        //Debug.Log(other.gameObject.name);
+        //var comp = other.GetComponent<Camera>();
+        //if (comp)
+        //{
+        //    DestroyTile(comp.transform);
+        //}
     }
    
 

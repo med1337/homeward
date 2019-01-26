@@ -7,6 +7,7 @@ public class LazyCamera : MonoBehaviour
     public Transform target;
     public float smoothTime = 0.3F;
     private Vector3 velocity = Vector3.zero;
+    private float velocity2 = 0.0f;
     private Vector3 displacement; 
 
     private void Start()
@@ -25,6 +26,13 @@ public class LazyCamera : MonoBehaviour
                                                 target.transform.position.z - displacement.z);
 
             // Smoothly move the camera towards that target position
+            var vel = (Mathf.Abs(target.GetComponent<BirdController>().velocity));
+            if (vel < 1)
+            {
+                vel = 1;
+            }
+            
+           // smoothTime = Mathf.SmoothDamp(smoothTime, 0.3f / vel, ref velocity2, 1/vel);
             transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
         }
     }
