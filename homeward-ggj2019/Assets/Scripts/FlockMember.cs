@@ -60,19 +60,6 @@ public class FlockMember : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (isLeader)
-        {
-            //todo: collision layer
-            Debug.Log(other.gameObject.name);
-            var comp = other.GetComponent<FoliageSpawner>();
-            if (comp)
-            {
-                comp.DestroyTile(transform);
-            }
-        }
-    }
 
     public void SetManager(FlockManager _manager)
     {

@@ -20,7 +20,7 @@ public class LazyCamera : MonoBehaviour
         if (target)
         {
             // Define a target position above and behind the target transform
-            Vector3 targetPosition = new Vector3(0,
+            Vector3 targetPosition = new Vector3(target.transform.position.x,
                                                 target.transform.position.y - displacement.y,
                                                 target.transform.position.z - displacement.z);
 

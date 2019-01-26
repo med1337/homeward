@@ -15,21 +15,45 @@ public class DuckHunter : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.LookAt(GameObject.FindObjectOfType<BirbController>().transform);
-        if (Input.GetKeyUp(KeyCode.Space))
+        if (FlockManager.Instance.leader)
         {
-            var go = GameObject.Instantiate(bullet, head.transform.position,Quaternion.identity);
-            Transform tr = GameObject.FindObjectOfType<BirbController>().transform;
-            //tr.position = 
+            var leader = FlockManager.Instance.leader.transform;
+            transform.LookAt(leader);
+            if (Input.GetKeyUp(KeyCode.Space))
+            {
+                var go = GameObject.Instantiate(bullet, head.transform.position, Quaternion.identity);
+                var newGo = new GameObject();
+                newGo.transform.rotation = leader.rotation;
 
-            //var primitive = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            //GameObject.Instantiate(primitive, trcp.position, Quaternion.identity);
-            var rnd = Random.Range(-5f, 5f);
-            //tr.position += Vector3.forward * rnd;
-            go.transform.LookAt(tr) ;
-            var rigid = go.GetComponent<Rigidbody>();
-            rigid.AddForce(transform.forward * 1000f);
-            Debug.Log(rnd);
+                var rnd = Random.Range(-5f, 5f); ;
+                newGo.transform.position = leader.position + leader.transform.forward * rnd ;
+                
+                go.transform.LookAt(newGo.transform);
+                var rigid = go.GetComponent<Rigidbody>();
+                rigid.AddForce(transform.forward * 500f);
+                Debug.Log(rnd);
+            }
         }
+        
     }
+
+    private void OnDrawGizmos()
+    {
+        //Ray weaponRay = new Ray(head.transform.position, FlockManager.Instance.leader.transform.position-head.transform.position);
+        //RaycastHit[] hitInfo = Physics.RaycastAll(head.transform.position, head.transform.forward, 1000);
+        //if (hitInfo.Length <=2)
+        //{
+
+            Gizmos.color = Color.green;
+        //}
+        //else
+        //{
+        //    Gizmos.color = Color.red;
+        //}
+        if(FlockManager.Instance.leader)
+        Gizmos.DrawLine(head.transform.position, FlockManager.Instance.leader.transform.position);
+
+    }
+
+
 }

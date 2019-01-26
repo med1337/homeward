@@ -40,7 +40,15 @@ public class PlaneSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyUp(KeyCode.Return))
+        {
+            foreach (var o in gameObjects)
+            {
+               
+                o.GetComponent<FoliageSpawner>();
+            }
+
+        }
     }
 
 

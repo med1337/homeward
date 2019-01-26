@@ -6,14 +6,14 @@ using Random = UnityEngine.Random;
 
 public class FoliageSpawner : MonoBehaviour
 {
-
+    [SerializeField] private List<Transform> raycastPoints = new List<Transform>();
     [SerializeField] private MeshCollider collider;
     [SerializeField] private List<GameObject> buildingPrefabs;
     [SerializeField] private List<GameObject> fieldPrefabs;
     [SerializeField] private List<GameObject> treePrefabs;
     [SerializeField] private List<GameObject> foliagePrefabs;
     private bool stop;
-    private List<GameObject> trees = new List<GameObject>();
+    public List<GameObject> spawnedObjects = new List<GameObject>();
     //public Tile currentTile;
     int counter = 0;
     int spawned = 0;
@@ -25,7 +25,7 @@ public class FoliageSpawner : MonoBehaviour
     {
         if (spawnTrees)
         {
-            StartCoroutine(SpawnBuildingCR());
+            StartCoroutine(SpawnMaximumTrees());
         }
 
         if (spawnHills)
@@ -33,6 +33,23 @@ public class FoliageSpawner : MonoBehaviour
            // StartCoroutine(SpawnFieldCR());
         }
     }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        foreach (var raycastPoint in raycastPoints)
+        {
+            var hits = Physics.SphereCastAll(raycastPoint.position, 1f, raycastPoint.transform.forward);
+            foreach (var raycastHit in hits)
+            {
+                var comp = raycastHit.transform.GetComponent<FoliageSpawner>();
+                if(comp && comp != this && comp.spawnedObjects.Count==0)
+                    Gizmos.DrawCube(raycastPoint.position,Vector3.one);
+            }
+        }
+    }
+
+
 
     // Update is called once per frame
     void Update()
@@ -49,11 +66,11 @@ public class FoliageSpawner : MonoBehaviour
         }
         if (Input.GetKeyUp(KeyCode.R))
         {
-            foreach (var item in trees)
+            foreach (var item in spawnedObjects)
             {
                 Destroy(item);
             }
-            trees.Clear();
+            spawnedObjects.Clear();
         }
     }
 
@@ -65,19 +82,22 @@ public class FoliageSpawner : MonoBehaviour
         var chance = Random.Range(0, 100);
         if (chance < 95)
         {
-            SpawnTrees();
             yield break;
         }
         while (!stop)
         {
             if (counter > 0 || spawned > 0)
             {
-                SpawnTrees();
                 yield break;
             }
-            var prefab = buildingPrefabs[Random.Range(0, buildingPrefabs.Count)];
 
-            StartCoroutine(Spawn(prefab));
+            if (buildingPrefabs.Count != 0)
+            {
+                var prefab = buildingPrefabs[Random.Range(0, buildingPrefabs.Count)];
+
+                StartCoroutine(Spawn(prefab));
+            }
+            
             yield return new WaitForSeconds(Random.Range(0f, 0.01f));
         }
 
@@ -151,7 +171,8 @@ public class FoliageSpawner : MonoBehaviour
         {
             if (counter > 3)
             {
-                SpawnFields();
+
+                StartCoroutine(SpawnBuildingCR());
                 yield break;
             }
             SpawnRandomFoliage();
@@ -163,22 +184,40 @@ public class FoliageSpawner : MonoBehaviour
 
     void SpawnRandomFoliage()
     {
-        var prefab = foliagePrefabs[Random.Range(0, foliagePrefabs.Count)];
-        StartCoroutine(Spawn(prefab));
+        if (foliagePrefabs.Count != 0)
+        {
+            var prefab = foliagePrefabs[Random.Range(0, foliagePrefabs.Count)];
+            StartCoroutine(Spawn(prefab,false));
+        }
 
     }
 
 
     void SpawnRandomTree()
     {
-        var prefab = treePrefabs[Random.Range(0, treePrefabs.Count)];
-        StartCoroutine(Spawn(prefab));
+        if (treePrefabs.Count != 0)
+        {
+            var prefab = treePrefabs[Random.Range(0, treePrefabs.Count)];
+            StartCoroutine(Spawn(prefab));
+        }
 
     }
 
+
+    private void OnTriggerEnter(Collider other)
+    {
+        //todo: collision layer
+        Debug.Log(other.gameObject.name);
+        var comp = other.GetComponent<Camera>();
+        if (comp)
+        {
+            DestroyTile(comp.transform);
+        }
+    }
    
 
-    IEnumerator Spawn(GameObject prefab)
+
+    IEnumerator Spawn(GameObject prefab, bool solid = true)
     {
         var bounds = collider.sharedMesh.bounds;
         //var objbounds = prefab.GetComponent<SpawnedObject>().myCollider.bounds.extents ;
@@ -229,7 +268,8 @@ public class FoliageSpawner : MonoBehaviour
         //go.GetComponent<SpawnedObject>().PlaySound();
         //go.GetComponent<SpawnedObject>().desiredScale = Vector3.one * Random.Range(0.8f, 1.2f);
         spawned++;
-        trees.Add(go);
+        if(solid)
+            spawnedObjects.Add(go);
         //go.transform.SetParent(transform);
     }
 
