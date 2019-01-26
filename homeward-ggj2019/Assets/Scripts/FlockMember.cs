@@ -58,19 +58,25 @@ public class FlockMember : MonoBehaviour
                 manager.RemoveFlockMember(this.gameObject);
             }
 
-            rigid.useGravity = true;
+            rigid.useGravity = true;            
             Destroy(this.gameObject, 3);
+            this.enabled = false;
         }
     }
-
-
     public void SetManager(FlockManager _manager)
     {
         manager = _manager;
     }
-
     public void SetIsLeader(bool _ldr)
     {
         isLeader = _ldr;
+    }
+    public float GetSpeed()
+    {
+        return movementSpeed;
+    }
+    public void SetSpeed(float _spd)
+    {
+        movementSpeed = _spd;
     }
 }

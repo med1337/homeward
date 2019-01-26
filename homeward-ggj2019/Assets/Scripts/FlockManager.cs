@@ -10,6 +10,7 @@ public class FlockManager : MonoBehaviour
     [SerializeField] Camera main_cam;
 
     [Header("Parameters")]
+    [SerializeField] float flightSpeed = 15.0f;
     [SerializeField] float avoidanceStrength = 1.0f;
     [SerializeField] float avoidanceDistance = 2.0f;
 
@@ -131,6 +132,13 @@ public class FlockManager : MonoBehaviour
 
             for (int j = 0; j < flockMembers.Count; j++)
             {
+                FlockMember bird = flockMembers[j].GetComponent<FlockMember>();
+
+                if (bird.GetSpeed() != flightSpeed)
+                {
+                    bird.SetSpeed(flightSpeed);
+                }
+
                 if (Vector3.Distance(flockMembers[j].transform.position, positionOffsets[j]) > 0.5f)
                 {
                     Vector3 targetPos = positionOffsets[j] - flockMembers[j].transform.position;
@@ -159,6 +167,13 @@ public class FlockManager : MonoBehaviour
                 {
                     leader.GetComponent<Rigidbody>().AddForce(-transform.up * (seekStrength * 2));
                 }
+            }
+
+            FlockMember ldr = leader.GetComponent<FlockMember>();
+
+            if (ldr.GetSpeed() != flightSpeed)
+            {
+                ldr.SetSpeed(flightSpeed);
             }
         }
     }
@@ -211,6 +226,8 @@ public class FlockManager : MonoBehaviour
         flockMembers[0].GetComponent<FlockMember>().SetIsLeader(true);
 
         main_cam.GetComponent<LazyCamera>().UpdateTarget(flockMembers[0]);
+
+        leader = flockMembers[0];
 
         flockMembers.RemoveAt(0);        
     }
