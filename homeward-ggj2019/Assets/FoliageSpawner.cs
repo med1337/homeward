@@ -63,7 +63,6 @@ public class FoliageSpawner : MonoBehaviour
         counter = 0;
         stop = false;
         var chance = Random.Range(0, 100);
-        Debug.Log(chance);
         if (chance < 95)
         {
             SpawnTrees();
@@ -103,7 +102,6 @@ public class FoliageSpawner : MonoBehaviour
         {
             if (counter > 0 || spawned > 0)
             {
-                StartCoroutine(SpawnMaximumTrees());
                 yield break;
             }
             SpawnField();
@@ -139,8 +137,8 @@ public class FoliageSpawner : MonoBehaviour
     void SpawnField()
     {
 
-        var prefab = fieldPrefabs[Random.Range(0, fieldPrefabs.Count)];
-        StartCoroutine(Spawn(prefab));
+        //var prefab = fieldPrefabs[Random.Range(0, fieldPrefabs.Count)];
+        //StartCoroutine(Spawn(prefab));
 
     }
 
@@ -153,6 +151,7 @@ public class FoliageSpawner : MonoBehaviour
         {
             if (counter > 3)
             {
+                SpawnFields();
                 yield break;
             }
             SpawnRandomFoliage();
@@ -221,8 +220,8 @@ public class FoliageSpawner : MonoBehaviour
 
         var go = Instantiate(prefab, transform.GetChild(0));
         go.transform.position = position;
-        var randomY = Random.Range(0f, 180f);
-        go.transform.Rotate(Vector3.up,randomY);
+        //var randomY = Random.Range(0f, 180f);
+        //go.transform.Rotate(Vector3.up,randomY);
         yield return new WaitForEndOfFrame();
         //go.transform.localScale = go.transform.localScale * Random.Range(0.6f, 1.6f);
         //if (currentTile)
@@ -250,7 +249,6 @@ public class FoliageSpawner : MonoBehaviour
             distance = Vector3.Distance(_transform.position, transform.position);
             yield return null;
         }
-        Debug.Log(Time.time - timer);
         GetComponentInParent<PlaneSpawner>().SpawnTile();
         Destroy(gameObject);
     }

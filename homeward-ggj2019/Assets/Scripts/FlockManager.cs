@@ -136,7 +136,7 @@ public class FlockManager : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         //todo: collision layer
-        Debug.Log(other.gameObject.name);
+        //Debug.Log(other.gameObject.name);
         var comp = other.GetComponent<FoliageSpawner>();
         if (comp)
         {
