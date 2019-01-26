@@ -6,7 +6,8 @@ public enum BiomeType
 {
     NONE = 0,
     MODERATE = 1,
-    LAKE = 2
+    LAKE = 2,
+    CITY = 3
 }
 
 public class Biome : MonoBehaviour

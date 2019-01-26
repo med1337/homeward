@@ -16,6 +16,7 @@ public class SpawnedObject : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] public Collider myCollider;
     [SerializeField] private string boolName = "GrowTriggered";
+    public Vector3 rotateAround = Vector3.up;
     private MeshRenderer mr;
     public Vector3 desiredScale = Vector3.one;
     public bool AnimationFinished = false;
@@ -27,7 +28,7 @@ public class SpawnedObject : MonoBehaviour
         mr = GetComponentInChildren<MeshRenderer>();
         //audioSource = GetComponent<AudioSource>();
         if (RandomRotation)
-            transform.localRotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
+            transform.localRotation = Quaternion.Euler((Random.Range(0, 360)* rotateAround)+transform.rotation.eulerAngles);
 
         if (RandomScale)
             transform.localScale = transform.localScale * Random.Range(0.8f, 1.2f);
