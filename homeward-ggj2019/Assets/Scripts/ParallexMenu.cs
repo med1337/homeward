@@ -10,7 +10,8 @@ public class ParallexMenu : MonoBehaviour
 
     void Start()
     {
-        recTransform = GetComponent<RectTransform>();
+        Screen.orientation = ScreenOrientation.Portrait;
+        recTransform = transform.Find("Frame").GetComponent<RectTransform>();
         CalibrateAccellerometer();
     }
 
