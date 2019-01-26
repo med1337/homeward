@@ -21,6 +21,8 @@ public class FlockManager : MonoBehaviour
 
     [SerializeField] float distanceDelayStrength = 50.0f;
 
+    private float flyingHeight = 8.0f;
+
     private float delayTimer = 0.0f;
     private float delayTimerMax = 3.0f;
     private bool delayOn = false;
@@ -74,7 +76,7 @@ public class FlockManager : MonoBehaviour
         }
         else
         {
-            Seek();
+            //Seek();
         }
     }
 
@@ -89,6 +91,8 @@ public class FlockManager : MonoBehaviour
 
             offset.x += xOffset;
             offset.z += zOffset;
+
+            offset.y = flyingHeight;
 
             if (!(i % 2 == 0))
             {
@@ -166,6 +170,8 @@ public class FlockManager : MonoBehaviour
                 offset.z -= zOffset;
             }
 
+            offset.y = flyingHeight;
+
             positionOffsets[i] = offset;
         }
     }
@@ -193,5 +199,8 @@ public class FlockManager : MonoBehaviour
         flockMembers.RemoveAt(0);        
     }
 
-
+    public void SetFlyingHeight(float _height)
+    {
+        flyingHeight = _height;
+    }
 }

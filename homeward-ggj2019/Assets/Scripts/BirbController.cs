@@ -12,7 +12,13 @@ public class BirbController : MonoBehaviour
     int moveForce = 0;
     int prevMoveForce = 0;
     Vector3 currentAngle;
-    Vector3 targetAngle; 
+    Vector3 targetAngle;
+    private Rigidbody rigid;
+
+    private void Start()
+    {
+        rigid = GetComponent<Rigidbody>();
+    }
 
     void FixedUpdate()
     {
@@ -39,15 +45,15 @@ public class BirbController : MonoBehaviour
 
         //Rotate dependent on direction
         if (moveForce > 10)
-            targetAngle = new Vector3(0, 180, -TurnRotation);
+            targetAngle = new Vector3(0, 0, TurnRotation);
         else if (moveForce < -10)
-            targetAngle = new Vector3(0, 180, TurnRotation);
+            targetAngle = new Vector3(0, 0, -TurnRotation);
         else
-            targetAngle = new Vector3(0, 180, 0);
+            targetAngle = new Vector3(0, 0, 0);
 
         currentAngle = new Vector3(
         Mathf.LerpAngle(currentAngle.x, targetAngle.x, Time.deltaTime),
-        Mathf.LerpAngle(currentAngle.y, targetAngle.y, Time.deltaTime),
+        180,
         Mathf.LerpAngle(currentAngle.z, targetAngle.z, Time.deltaTime));
         transform.eulerAngles = currentAngle;
 
@@ -57,14 +63,7 @@ public class BirbController : MonoBehaviour
         if (transform.position.x > -EdgeDistance)
             moveForce -= Responsiveness*2;
 
-        //Apply updated velocity
-        GetComponent<Rigidbody>().velocity = new Vector3(moveForce/10, 0, speed);
-
-        //Debug log velocity 
-        //if (moveForce != prevMoveForce)
-        //{
-        //    Debug.Log(moveForce);
-        //    prevMoveForce = moveForce; 
-        //}
+        //Apply updated velocity        
+        rigid.velocity = new Vector3(moveForce/10, 0, rigid.velocity.z);
     }
 }
