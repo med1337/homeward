@@ -236,7 +236,7 @@ public class FoliageSpawner : MonoBehaviour
             yield return null;
         }
         Debug.Log(Time.time - timer);
-        
+        GetComponentInParent<PlaneSpawner>().SpawnTile();
         Destroy(gameObject);
     }
 
