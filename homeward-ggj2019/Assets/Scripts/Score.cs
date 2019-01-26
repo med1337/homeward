@@ -8,8 +8,9 @@ public class Score : MonoBehaviour
     private int score = 0;
     public float timeBetweenIncrementing = 0.5f;
     public Text ScoreText;
-
-
+    public Button PauseButton;
+    public Sprite[] buttonImages;
+    private bool GamePaused = false;
     private IEnumerator coroutine;
 
     // Start is called before the first frame update
@@ -17,6 +18,7 @@ public class Score : MonoBehaviour
     {
         coroutine = IncrementScore(timeBetweenIncrementing);
         StartCoroutine(coroutine);
+        PauseButton.onClick.AddListener(PauseClicked);
     }
 
     // Update is called once per frame
@@ -33,6 +35,22 @@ public class Score : MonoBehaviour
             yield return new WaitForSeconds(waitTime);
             score += 1;
             ScoreText.text = score.ToString() + "m";
+        }
+    }
+
+    void PauseClicked()
+    {
+        if(!GamePaused)
+        {
+            Time.timeScale = 0;
+            PauseButton.image.sprite = buttonImages[1];
+            GamePaused = true;
+        }
+        else
+        {
+            Time.timeScale = 1;
+            PauseButton.image.sprite = buttonImages[0];
+            GamePaused = false;
         }
     }
 }
