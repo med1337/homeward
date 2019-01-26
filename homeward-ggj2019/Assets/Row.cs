@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Row : MonoBehaviour
 {
+    public List<GameObject> gameObjects = new List<GameObject>();
+
+    private BiomeType biomeType = BiomeType.NONE;
     // Start is called before the first frame update
     void Start()
     {
@@ -29,8 +32,30 @@ public class Row : MonoBehaviour
 
     private IEnumerator DisableRow()
     {
-        PlaneSpawner.Instance.SpawnRow();
+        //PlaneSpawner.Instance.SpawnRow();
         yield return new WaitForSeconds(1f);
         gameObject.SetActive(false);
+    }
+
+
+    public void SpawnTiles(int width, GameObject tilePrefab, BiomeType _biomeType)
+    {
+        biomeType = _biomeType;
+        for (int i = -width / 2; i <= width / 2; i++)
+        {
+            var go = GameObject.Instantiate(tilePrefab, transform);
+            gameObjects.Add(go);
+            if (Mathf.Abs(i) >= (width - 5) / 2)
+            {
+                go.GetComponent<BarrierSpawner>().Populate(biomeType);
+            }
+            else
+            {
+                //go.GetComponent<FoliageSpawner>().Init(currentBiome.GetComponent<Biome>().BiomeType);
+
+            }
+            go.transform.position += transform.right * 10f * i;
+            //go.transform.position += transform.forward * 10f * tilePrefab.transform.localScale.z * rowCounter;
+        }
     }
 }

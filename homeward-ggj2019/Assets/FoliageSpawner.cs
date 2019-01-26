@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+
 public class FoliageSpawner : MonoBehaviour
 {
     [SerializeField] private Material temporaryHackSolutionMaterial;
@@ -53,9 +54,9 @@ public class FoliageSpawner : MonoBehaviour
             case BiomeType.LAKE:
                 GetComponentInChildren<MeshRenderer>().material = temporaryHackSolutionMaterial;
                 break;
-            case BiomeType.CITY:
-                StartCoroutine(SpawnBuildingCR());
-                break;
+            //case BiomeType.CITY:
+            //    StartCoroutine(SpawnBuildingCR());
+            //    break;
         }
     }
 

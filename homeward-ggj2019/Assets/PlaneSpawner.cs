@@ -13,11 +13,11 @@ public class PlaneSpawner : MonoBehaviour
     [SerializeField] private int width = 7;
     [SerializeField] private int biomlength = 15;
     private int rowCounter = 0;
-    private int biomCounter = 0;
+    public int biomCounter = 0;
 
     private List<GameObject> gameObjects;
     public static PlaneSpawner Instance = null;
-    public int Level = 1;
+    public int Level = 0;
 
 
     //Awake is always called before any Start functions
@@ -45,53 +45,29 @@ public class PlaneSpawner : MonoBehaviour
     void Start()
     {
         gameObjects = new List<GameObject>();
-        for (int i = 0; i < 14; i++)
-        {
-            SpawnRow();
-
-        }
+        SpawnBiome();
         //StartCoroutine(SpawnTiles());
         //StartCoroutine(DestroyTiles());
     }
 
 
-    private void SpawnBiome()
+    public void SpawnBiome()
     {
-        currentBiome = nextBiome ? nextBiome : GameObject.Instantiate(biomePrefab, transform.GetChild(0));
-        nextBiome = GameObject.Instantiate(biomePrefab, transform.GetChild(0));
+        currentBiome = GameObject.Instantiate(biomePrefab, transform.GetChild(0));
+        currentBiome.GetComponent<Biome>().Init(width, rowPrefab, tilePrefab);
+        nextBiome = currentBiome;
         biomCounter++;
     }
 
 
-    public void SpawnRow()
+    public void PopulateNextBiome()
     {
-        if (rowCounter % 15 == 0 )
-        {
-            SpawnBiome();
-        }
-        var row =Instantiate(rowPrefab, currentBiome.transform);
-        row.transform.position += transform.forward * 10f * rowCounter;
-        row.name = "Row" + rowCounter;
-        for (int i = -width / 2; i <= width / 2; i++)
-        {
-            var go = GameObject.Instantiate(tilePrefab, row.transform);
-            gameObjects.Add(go);
-            if (Mathf.Abs(i) >= (width - 5) / 2)
-            {
-                go.GetComponent<FoliageSpawner>().Init(BiomeType.NONE);
-            }
-            else
-            {
-                go.GetComponent<FoliageSpawner>().Init(currentBiome.GetComponent<Biome>().BiomeType);
-
-            }
-            go.transform.position += transform.right * 10f * i;
-            //go.transform.position += transform.forward * 10f * tilePrefab.transform.localScale.z * rowCounter;
-        }
-
-        rowCounter++;
-       
+        Level++;
+        nextBiome = GameObject.Instantiate(biomePrefab, transform.GetChild(0));
+        nextBiome.transform.position += transform.forward * 150 * (Level-1);
+        nextBiome.GetComponent<Biome>().Init(width, rowPrefab, tilePrefab);
     }
+   
 
     private IEnumerator DestroyTiles()
     {
@@ -115,8 +91,6 @@ public class PlaneSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyUp(KeyCode.Return))
-            Level++;
     }
 
 

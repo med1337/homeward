@@ -23,6 +23,8 @@ public class SpawnedObject : MonoBehaviour
     public float minScale = .8f;
     public bool AnimationFinished = false;
     public bool RandomRotation = false;
+    public float radius;
+
 
     // Use this for initialization
     void Start()
