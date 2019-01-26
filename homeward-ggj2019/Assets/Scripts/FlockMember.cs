@@ -50,7 +50,7 @@ public class FlockMember : MonoBehaviour
             if (controller.enabled)
             {
                 controller.enabled = false;
-                //manager.UpdateLeader();
+                manager.UpdateLeader();
             }
 
             if (manager)
