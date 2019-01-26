@@ -24,5 +24,10 @@ public class GameplayManager : MonoBehaviour
         score.StopAllCoroutines();
 
         gameOverUI.SetActive(true);
+
+        if (PlayerPrefs.GetInt("Score", 0) < score.GetScore())
+        {
+            PlayerPrefs.SetInt("Score", score.GetScore());
+        }
     }
 }

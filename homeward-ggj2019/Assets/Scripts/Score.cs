@@ -57,4 +57,9 @@ public class Score : MonoBehaviour
     {
         SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
     }
+
+    public int GetScore()
+    {
+        return score;
+    }
 }

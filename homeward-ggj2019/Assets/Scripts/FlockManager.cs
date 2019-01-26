@@ -11,6 +11,7 @@ public class FlockManager : MonoBehaviour
     [SerializeField] Camera main_cam;
     [SerializeField] Score score;
     [SerializeField] GameplayManager gameManager;
+    [SerializeField] CameraShake camShake;
 
     [Header("Parameters")]
     [SerializeField] float flightSpeed = 15.0f;
@@ -31,6 +32,11 @@ public class FlockManager : MonoBehaviour
     private float delayTimerMax = 1.0f;
     private bool delayOn = false;
 
+    private float boostTimer = 0.0f;
+    [SerializeField] float boostTimerMax = 3.0f;
+    private bool boostOn = false;
+
+
     public static FlockManager Instance = null;
 
 
@@ -50,9 +56,7 @@ public class FlockManager : MonoBehaviour
             Destroy(gameObject);
 
         //Sets this to not be destroyed when reloading scene
-        //DontDestroyOnLoad(gameObject);
-
-       
+        //DontDestroyOnLoad(gameObject);       
     }
 
     // Start is called before the first frame update
@@ -68,6 +72,17 @@ public class FlockManager : MonoBehaviour
 
         Avoid();
 
+        UpdateTimers();
+
+        if (!delayOn)
+        {
+            Seek();
+        }
+
+    }
+
+    void UpdateTimers()
+    {
         if (delayOn)
         {
             if (delayTimer < delayTimerMax)
@@ -80,9 +95,27 @@ public class FlockManager : MonoBehaviour
                 delayOn = false;
             }
         }
+
+        if (boostOn)
+        {
+            if (boostTimer < boostTimerMax)
+            {
+                boostTimer += Time.deltaTime;
+                main_cam.fieldOfView = Mathf.Lerp(main_cam.fieldOfView, 120, 0.1f);
+            }
+            else
+            {
+                boostTimer = 0.0f;
+                boostOn = false;
+                DisableBoost();
+            }
+        }
         else
         {
-            Seek();
+            if (main_cam.fieldOfView != 90)
+            {
+                main_cam.fieldOfView = Mathf.Lerp(main_cam.fieldOfView, 90, 0.1f);
+            }
         }
     }
 
@@ -200,7 +233,6 @@ public class FlockManager : MonoBehaviour
             }
         }
     }
-
     void UpdateOffsetPositions()
     {
         float xOffset = avoidanceDistance;
@@ -244,6 +276,8 @@ public class FlockManager : MonoBehaviour
                 }
             }
         }
+
+        camShake.ShakeCam(0.2f, 0.5f);
     }    
 
     public void AddNewFlockMember(GameObject _bird)
@@ -272,9 +306,31 @@ public class FlockManager : MonoBehaviour
             CheckGameOver();
         }
     }
-
     public void SetFlyingHeight(float _height)
     {
         flyingHeight = _height;
+    }
+
+    public void EnableBoost()
+    {
+        camShake.ShakeCam(boostTimerMax, 0.3f);
+
+        //foreach(GameObject bird in flockMembers)
+        //{
+        //    bird.GetComponent<FlockMember>().SetInvunerable(true);
+        //}
+
+        boostOn = true;
+        flightSpeed += 100.0f;
+    }
+
+    private void DisableBoost()
+    {
+        foreach (GameObject bird in flockMembers)
+        {
+            bird.GetComponent<FlockMember>().SetInvunerable(false);
+        }
+
+        flightSpeed -= 100.0f;
     }
 }
