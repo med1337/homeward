@@ -32,11 +32,15 @@ public class FlockMember : MonoBehaviour
 
     void AnimationSpeedUpdate()
     {
-        if (gameObject != manager.leader)
+        if (manager != null)
         {
-            transform.rotation = manager.leader.transform.rotation;
+            if (gameObject != manager.leader)
+            {
+                transform.rotation = manager.leader.transform.rotation;
 
+            }
         }
+       
 
             float speed = rigid.velocity.magnitude / 10.0f;
 
