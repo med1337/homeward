@@ -188,7 +188,7 @@ public class FlockManager : MonoBehaviour
                 }
                 else
                 {
-                    leader.GetComponent<Rigidbody>().AddForce(-transform.up * (seekStrength * 2));
+                    leader.GetComponent<Rigidbody>().AddForce(-transform.up * 5 *  (seekStrength * 2));
                 }
             }
 

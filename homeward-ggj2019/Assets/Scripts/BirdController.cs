@@ -66,6 +66,15 @@ public class BirdController : MonoBehaviour
             forceApplied = -1;
         if (Input.GetKey(KeyCode.D))
             forceApplied = 1;
+
+        if (transform.position.x < -20 )
+        {
+            forceApplied = 1;
+        }
+        else if (transform.position.x > 20)
+        {
+            forceApplied = -1;
+        }
     }
 
     void FixedUpdate()

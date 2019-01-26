@@ -9,6 +9,7 @@ public class FoliageSpawner : MonoBehaviour
     [SerializeField] private Material temporaryHackSolutionMaterial;
     [SerializeField] private List<Transform> raycastPoints = new List<Transform>();
     [SerializeField] private MeshCollider collider;
+    [SerializeField] private List<GameObject> barrierPrefabs;
     [SerializeField] private List<GameObject> buildingPrefabs;
     [SerializeField] private List<GameObject> fieldPrefabs;
     [SerializeField] private List<GameObject> treePrefabs;
@@ -21,6 +22,9 @@ public class FoliageSpawner : MonoBehaviour
 
     public bool spawnTrees = false;
     public bool spawnHills = false;
+
+
+
     // Use this for initialization
     void Start()
     {
@@ -41,7 +45,7 @@ public class FoliageSpawner : MonoBehaviour
         switch (type)
         {
             case BiomeType.NONE:
-                StartCoroutine(SpawnGrass());
+                StartCoroutine(SpawnBarriers());
                 break;
             case BiomeType.MODERATE:
                 StartCoroutine(SpawnMaximumTrees());
@@ -78,7 +82,7 @@ public class FoliageSpawner : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.P))
         {
             Debug.Log("CR");
-            StartCoroutine(SpawnMaximumTrees());
+            StartCoroutine(SpawnBarriers());
         }
         if (Input.GetKeyUp(KeyCode.F))
         {
@@ -151,6 +155,25 @@ public class FoliageSpawner : MonoBehaviour
 
     }
 
+    IEnumerator SpawnBarriers()
+    {
+        counter = 0;
+        spawned = 0;
+        stop = false;
+        
+        while (!stop)
+        {
+            if (counter > 25)
+            {
+                StartCoroutine(SpawnGrass());
+                yield break;
+            }
+            SpawnRandomBarrier();
+            yield return new WaitForSeconds(Random.Range(0f, 0.01f));
+        }
+
+    }
+
     IEnumerator SpawnMaximumTrees()
     {
         counter = 0;
@@ -212,7 +235,15 @@ public class FoliageSpawner : MonoBehaviour
 
     }
 
+    void SpawnRandomBarrier()
+    {
+        if (barrierPrefabs.Count != 0)
+        {
+            var prefab = barrierPrefabs[Random.Range(0, barrierPrefabs.Count)];
+            StartCoroutine(Spawn(prefab));
+        }
 
+    }
     void SpawnRandomTree()
     {
         if (treePrefabs.Count != 0)

@@ -10,7 +10,7 @@ public class PlaneSpawner : MonoBehaviour
     private GameObject currentBiome;
     private GameObject nextBiome;
     [SerializeField] private GameObject tilePrefab;
-    [SerializeField] private int width = 5;
+    [SerializeField] private int width = 7;
     [SerializeField] private int biomlength = 15;
     private int rowCounter = 0;
     private int biomCounter = 0;
@@ -36,7 +36,7 @@ public class PlaneSpawner : MonoBehaviour
             Destroy(gameObject);
 
         //Sets this to not be destroyed when reloading scene
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
 
 
     }
@@ -45,7 +45,7 @@ public class PlaneSpawner : MonoBehaviour
     void Start()
     {
         gameObjects = new List<GameObject>();
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 14; i++)
         {
             SpawnRow();
 
@@ -76,7 +76,15 @@ public class PlaneSpawner : MonoBehaviour
         {
             var go = GameObject.Instantiate(tilePrefab, row.transform);
             gameObjects.Add(go);
-            go.GetComponent<FoliageSpawner>().Init(currentBiome.GetComponent<Biome>().BiomeType);
+            if (Mathf.Abs(i) >= (width - 5) / 2)
+            {
+                go.GetComponent<FoliageSpawner>().Init(BiomeType.NONE);
+            }
+            else
+            {
+                go.GetComponent<FoliageSpawner>().Init(currentBiome.GetComponent<Biome>().BiomeType);
+
+            }
             go.transform.position += transform.right * 10f * i;
             //go.transform.position += transform.forward * 10f * tilePrefab.transform.localScale.z * rowCounter;
         }

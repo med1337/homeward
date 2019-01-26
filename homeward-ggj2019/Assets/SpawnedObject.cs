@@ -19,6 +19,8 @@ public class SpawnedObject : MonoBehaviour
     public Vector3 rotateAround = Vector3.up;
     private MeshRenderer mr;
     public Vector3 desiredScale = Vector3.one;
+    public float maxScale = 1.2f;
+    public float minScale = .8f;
     public bool AnimationFinished = false;
     public bool RandomRotation = false;
 
@@ -31,7 +33,7 @@ public class SpawnedObject : MonoBehaviour
             transform.localRotation = Quaternion.Euler((Random.Range(0, 360)* rotateAround)+transform.rotation.eulerAngles);
 
         if (RandomScale)
-            transform.localScale = transform.localScale * Random.Range(0.8f, 1.2f);
+            transform.localScale = transform.localScale * Random.Range(minScale, maxScale);
         OnSpawn();
     }
 

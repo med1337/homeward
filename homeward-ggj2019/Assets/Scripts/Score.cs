@@ -27,8 +27,9 @@ public class Score : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(waitTime);
-            score += 1;
-            ScoreText.text = score.ToString() + "m";
+
+            score++;
+            ScoreText.text = score.ToString("0") + "m";
         }
     }
 
