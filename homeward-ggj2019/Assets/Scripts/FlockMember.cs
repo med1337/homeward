@@ -11,6 +11,8 @@ public class FlockMember : MonoBehaviour
     [SerializeField] bool isLeader = false;
     [SerializeField] float movementSpeed = 1.0f;
 
+    [SerializeField] GameObject deathExplosionPrefab;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -36,21 +38,24 @@ public class FlockMember : MonoBehaviour
 
         }
 
-        float speed = rigid.velocity.magnitude / 10.0f;
+            float speed = rigid.velocity.magnitude / 10.0f;
 
-        if (speed > 1)
-        {
-            speed *= 5.0f;
+            if (speed > 1)
+            {
+                speed *= 5.0f;
+            }
+
+            float animSpeed = speed;
+            anim.speed = animSpeed;
         }
-
-        float animSpeed = speed;
-        anim.speed = animSpeed;
     }
 
     void OnCollisionEnter(Collision col)
     {
         if (!col.transform.GetComponent<FlockMember>())
         {
+            Instantiate(deathExplosionPrefab, transform.position, transform.rotation);
+
             BirdController controller = GetComponent<BirdController>();
 
             if (controller.enabled)
@@ -64,19 +69,40 @@ public class FlockMember : MonoBehaviour
                 manager.RemoveFlockMember(this.gameObject);
             }
 
-            rigid.useGravity = true;
-            Destroy(this.gameObject, 3);
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            FlockMember brd = col.transform.GetComponent<FlockMember>();
+            if (!brd.GetManager())
+            {
+                brd.AddToFlock(manager);
+            }
         }
     }
-
-
     public void SetManager(FlockManager _manager)
     {
         manager = _manager;
     }
-
+    public FlockManager GetManager()
+    {
+        return manager;
+    }
     public void SetIsLeader(bool _ldr)
     {
         isLeader = _ldr;
+    }
+    public float GetSpeed()
+    {
+        return movementSpeed;
+    }
+    public void SetSpeed(float _spd)
+    {
+        movementSpeed = _spd;
+    }
+    public void AddToFlock(FlockManager _manager)
+    {
+        manager = _manager;
+        manager.AddNewFlockMember(this.gameObject);
     }
 }

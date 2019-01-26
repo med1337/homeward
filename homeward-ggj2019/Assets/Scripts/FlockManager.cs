@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class FlockManager : MonoBehaviour    
 {
@@ -10,6 +11,7 @@ public class FlockManager : MonoBehaviour
     [SerializeField] Camera main_cam;
 
     [Header("Parameters")]
+    [SerializeField] float flightSpeed = 15.0f;
     [SerializeField] float avoidanceStrength = 1.0f;
     [SerializeField] float avoidanceDistance = 2.0f;
 
@@ -24,7 +26,7 @@ public class FlockManager : MonoBehaviour
     [SerializeField] float flyingHeight = 10.0f;
 
     private float delayTimer = 0.0f;
-    private float delayTimerMax = 3.0f;
+    private float delayTimerMax = 1.0f;
     private bool delayOn = false;
 
     public static FlockManager Instance = null;
@@ -60,6 +62,8 @@ public class FlockManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        CheckGameOver();
+
         Avoid();
 
         if (delayOn)
@@ -77,6 +81,17 @@ public class FlockManager : MonoBehaviour
         else
         {
             Seek();
+        }
+    }
+
+    void CheckGameOver()
+    {
+        if (flockMembers.Count < 1)
+        {
+            if (!leader)
+            {
+                SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
+            }
         }
     }
 
@@ -131,6 +146,13 @@ public class FlockManager : MonoBehaviour
 
             for (int j = 0; j < flockMembers.Count; j++)
             {
+                FlockMember bird = flockMembers[j].GetComponent<FlockMember>();
+
+                if (bird.GetSpeed() != flightSpeed)
+                {
+                    bird.SetSpeed(flightSpeed);
+                }
+
                 if (Vector3.Distance(flockMembers[j].transform.position, positionOffsets[j]) > 0.5f)
                 {
                     Vector3 targetPos = positionOffsets[j] - flockMembers[j].transform.position;
@@ -142,6 +164,10 @@ public class FlockManager : MonoBehaviour
                     speed *= ((distanceDelayStrength / Vector3.Distance(flockMembers[j].transform.position, leader.transform.position)) / 4);
 
                     flockMembers[j].GetComponent<Rigidbody>().AddForce(targetPos * speed);
+                }
+                if (Vector3.Distance(flockMembers[j].transform.position, positionOffsets[j]) > 3.0f)
+                {
+                    flockMembers[j].GetComponent<Rigidbody>().AddForce(transform.up * (Random.Range(1, 5)));
                 }
             }
 
@@ -159,6 +185,13 @@ public class FlockManager : MonoBehaviour
                 {
                     leader.GetComponent<Rigidbody>().AddForce(-transform.up * (seekStrength * 2));
                 }
+            }
+
+            FlockMember ldr = leader.GetComponent<FlockMember>();
+
+            if (ldr.GetSpeed() != flightSpeed)
+            {
+                ldr.SetSpeed(flightSpeed);
             }
         }
     }
@@ -199,20 +232,40 @@ public class FlockManager : MonoBehaviour
             if (flockMembers[i] == _bird)
             {
                 flockMembers.RemoveAt(i);
+
+                for (int j = i; j < flockMembers.Count; j++)
+                {
+                    flockMembers[j].GetComponent<Rigidbody>().AddForce(transform.up * (Random.Range(2, 6)), ForceMode.Impulse);
+                }
             }
         }
     }    
 
+    public void AddNewFlockMember(GameObject _bird)
+    {
+        flockMembers.Add(_bird);
+        _bird.GetComponent<Rigidbody>().AddForce(transform.up * (Random.Range(8, 10)), ForceMode.Impulse);
+    }
+
     public void UpdateLeader()
     {
-        delayOn = true;
+        if (flockMembers.Count > 0)
+        {
+            delayOn = true;
 
-        flockMembers[0].GetComponent<BirdController>().enabled = true;
-        flockMembers[0].GetComponent<FlockMember>().SetIsLeader(true);
+            flockMembers[0].GetComponent<BirdController>().enabled = true;
+            flockMembers[0].GetComponent<FlockMember>().SetIsLeader(true);
 
-        main_cam.GetComponent<LazyCamera>().UpdateTarget(flockMembers[0]);
+            main_cam.GetComponent<LazyCamera>().UpdateTarget(flockMembers[0]);
 
-        flockMembers.RemoveAt(0);        
+            leader = flockMembers[0];
+
+            flockMembers.RemoveAt(0);
+        }
+        else
+        {
+            CheckGameOver();
+        }
     }
 
     public void SetFlyingHeight(float _height)
