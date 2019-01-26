@@ -17,12 +17,18 @@ public class FoliageSpawner : MonoBehaviour
     int spawned = 0;
 
     public bool spawnTrees = false;
+    public bool spawnHills = false;
     // Use this for initialization
     void Start()
     {
         if (spawnTrees)
         {
-            StartCoroutine(SpawnMaximumTrees());
+            //StartCoroutine(SpawnMaximumTrees());
+        }
+
+        if (spawnHills)
+        {
+            StartCoroutine(SpawnFieldCR());
         }
     }
 
@@ -86,7 +92,7 @@ public class FoliageSpawner : MonoBehaviour
         stop = false;
         while (!stop)
         {
-            if (counter > 2 || spawned > 2)
+            if (counter > 0 || spawned > 0)
             {
                 StartCoroutine(SpawnMaximumTrees());
                 yield break;
@@ -183,6 +189,15 @@ public class FoliageSpawner : MonoBehaviour
             }
 
         }
+
+        Ray ray = new Ray(position+Vector3.up*10,Vector3.down);
+        RaycastHit hit = new RaycastHit();
+        
+        if(Physics.Raycast(ray,out hit))
+        {
+            position = hit.point - Vector3.up*0.2f;
+        }
+
 
 
         var go = Instantiate(prefab, transform);
