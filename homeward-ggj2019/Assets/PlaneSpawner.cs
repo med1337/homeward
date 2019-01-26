@@ -46,17 +46,14 @@ public class PlaneSpawner : MonoBehaviour
 
     private IEnumerator SpawnTiles()
     {
-        while (true)
+        while (counter <20)
         {
             SpawnTile();
-            if (counter < 10)
                 yield return null;
-            else
-                yield return new WaitForSeconds(1.25f);
         }
     }
 
-    void SpawnTile()
+    public void SpawnTile()
     {
         var go = GameObject.Instantiate(tilePrefab, transform);
         gameObjects.Add(go);
