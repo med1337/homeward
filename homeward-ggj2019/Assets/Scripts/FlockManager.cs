@@ -21,6 +21,8 @@ public class FlockManager : MonoBehaviour
 
     [SerializeField] float distanceDelayStrength = 50.0f;
 
+    [SerializeField] float flyingHeight = 10.0f;
+
     private float delayTimer = 0.0f;
     private float delayTimerMax = 3.0f;
     private bool delayOn = false;
@@ -90,6 +92,8 @@ public class FlockManager : MonoBehaviour
             offset.x += xOffset;
             offset.z += zOffset;
 
+            offset.y = flyingHeight;
+
             if (!(i % 2 == 0))
             {
                 offset.x *= -1;
@@ -131,13 +135,29 @@ public class FlockManager : MonoBehaviour
                 {
                     Vector3 targetPos = positionOffsets[j] - flockMembers[j].transform.position;
 
-                    float speed = seekStrength;// * Vector3.Distance(flockMembers[j].transform.position, positionOffsets[j]);
+                    float speed = seekStrength;
 
                     speed *= Random.Range(0.2f, 1.8f);
 
                     speed *= ((distanceDelayStrength / Vector3.Distance(flockMembers[j].transform.position, leader.transform.position)) / 4);
 
                     flockMembers[j].GetComponent<Rigidbody>().AddForce(targetPos * speed);
+                }
+            }
+
+            
+            Vector3 leaderTargetPos = leader.transform.position;
+            leaderTargetPos.y = flyingHeight;
+
+            if (!((leader.transform.position.y < flyingHeight + 5) && (leader.transform.position.y > flyingHeight + 5)))
+            {
+                if (leader.transform.position.y < flyingHeight)
+                {
+                    leader.GetComponent<Rigidbody>().AddForce(transform.up * (seekStrength * 2));
+                }
+                else
+                {
+                    leader.GetComponent<Rigidbody>().AddForce(-transform.up * (seekStrength * 2));
                 }
             }
         }
@@ -166,6 +186,8 @@ public class FlockManager : MonoBehaviour
                 offset.z -= zOffset;
             }
 
+            offset.y = leader.transform.position.y;
+
             positionOffsets[i] = offset;
         }
     }
@@ -193,5 +215,8 @@ public class FlockManager : MonoBehaviour
         flockMembers.RemoveAt(0);        
     }
 
-
+    public void SetFlyingHeight(float _height)
+    {
+        flyingHeight = _height;
+    }
 }
