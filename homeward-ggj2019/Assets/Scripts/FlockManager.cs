@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class FlockManager : MonoBehaviour    
 {
-    [Header("Bird references")]
+    [Header("References")]
     [SerializeField] GameObject leader;
     [SerializeField] List<GameObject> flockMembers;
+    [SerializeField] Camera main_cam;
 
     [Header("Parameters")]
     [SerializeField] float avoidanceStrength = 1.0f;
@@ -20,6 +21,10 @@ public class FlockManager : MonoBehaviour
 
     [SerializeField] float distanceDelayStrength = 50.0f;
 
+    private float delayTimer = 0.0f;
+    private float delayTimerMax = 3.0f;
+    private bool delayOn = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,13 +35,29 @@ public class FlockManager : MonoBehaviour
     void Update()
     {
         Avoid();
-        Seek();
+
+        if (delayOn)
+        {
+            if (delayTimer < delayTimerMax)
+            {
+                delayTimer += Time.deltaTime;
+            }
+            else
+            {
+                delayTimer = 0.0f;
+                delayOn = false;
+            }
+        }
+        else
+        {
+            Seek();
+        }
     }
 
     void SetOffsetPositions()
     {
-        float xOffset = 1;
-        float zOffset = 1;
+        float xOffset = avoidanceDistance;
+        float zOffset = avoidanceDistance;
 
         for (int i = 0; i < flockMaxSize; i++)
         {
@@ -76,29 +97,32 @@ public class FlockManager : MonoBehaviour
 
     void Seek()
     {
-        UpdateOffsetPositions();
-
-        for (int j = 0; j < flockMembers.Count; j++)
+        if (leader)
         {
-            if (Vector3.Distance(flockMembers[j].transform.position, positionOffsets[j]) > 0.5f)
+            UpdateOffsetPositions();
+
+            for (int j = 0; j < flockMembers.Count; j++)
             {
-                Vector3 targetPos = positionOffsets[j] - flockMembers[j].transform.position;
+                if (Vector3.Distance(flockMembers[j].transform.position, positionOffsets[j]) > 0.5f)
+                {
+                    Vector3 targetPos = positionOffsets[j] - flockMembers[j].transform.position;
 
-                float speed = seekStrength * Vector3.Distance(flockMembers[j].transform.position, positionOffsets[j]);
+                    float speed = seekStrength;// * Vector3.Distance(flockMembers[j].transform.position, positionOffsets[j]);
 
-                speed *= Random.Range(0.2f, 1.8f);
+                    speed *= Random.Range(0.2f, 1.8f);
 
-                speed *= ((distanceDelayStrength / Vector3.Distance(flockMembers[j].transform.position, leader.transform.position)) / 4);                
+                    speed *= ((distanceDelayStrength / Vector3.Distance(flockMembers[j].transform.position, leader.transform.position)) / 4);
 
-                flockMembers[j].GetComponent<Rigidbody>().AddForce(targetPos * speed);
+                    flockMembers[j].GetComponent<Rigidbody>().AddForce(targetPos * speed);
+                }
             }
         }
     }
 
     void UpdateOffsetPositions()
     {
-        float xOffset = 1;
-        float zOffset = 1;
+        float xOffset = avoidanceDistance;
+        float zOffset = avoidanceDistance;
 
         for (int i = 0; i < flockMembers.Count; i++)
         {
@@ -131,18 +155,18 @@ public class FlockManager : MonoBehaviour
                 flockMembers.RemoveAt(i);
             }
         }
-    }
+    }    
 
-    private void OnTriggerEnter(Collider other)
+    public void UpdateLeader()
     {
-        //todo: collision layer
-        Debug.Log(other.gameObject.name);
-        var comp = other.GetComponent<FoliageSpawner>();
-        if (comp)
-        {
-            comp.DestroyTile(transform);
-        }
-        
+        delayOn = true;
+
+        flockMembers[0].GetComponent<BirbController>().enabled = true;
+        flockMembers[0].GetComponent<FlockMember>().SetIsLeader(true);
+
+        main_cam.GetComponent<LazyCamera>().UpdateTarget(flockMembers[0]);
+
+        flockMembers.RemoveAt(0);        
     }
 
 

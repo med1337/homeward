@@ -17,12 +17,20 @@ public class LazyCamera : MonoBehaviour
     }
     void FixedUpdate()
     {
-        // Define a target position above and behind the target transform
-        Vector3 targetPosition = new Vector3(0, 
-                                            target.transform.position.y - displacement.y,
-                                            target.transform.position.z - displacement.z);
+        if (target)
+        {
+            // Define a target position above and behind the target transform
+            Vector3 targetPosition = new Vector3(0,
+                                                target.transform.position.y - displacement.y,
+                                                target.transform.position.z - displacement.z);
 
-        // Smoothly move the camera towards that target position
-        transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
+            // Smoothly move the camera towards that target position
+            transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
+        }
+    }
+
+    public void UpdateTarget(GameObject _target)
+    {
+        target = _target.transform;
     }
 }

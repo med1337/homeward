@@ -8,6 +8,9 @@ public class FlockMember : MonoBehaviour
     private Animator anim;
     private Rigidbody rigid;
 
+    [SerializeField] bool isLeader = false;
+    [SerializeField] float movementSpeed = 1.0f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,34 +23,64 @@ public class FlockMember : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (rigid.velocity.magnitude > 15.0f)
-        {
-            float speed = rigid.velocity.magnitude / 10.0f;
-            
-            if (speed > 1.1f)
-            {
-                speed *= 5.0f;
-            }
+        AnimationSpeedUpdate();
 
-            float animSpeed = speed;
-            //float animSpeed = 1.0f;
-            //animSpeed += (rigid.velocity.magnitude * rigid.velocity.magnitude) * 0.05f;
-            anim.speed = animSpeed;
+        rigid.AddForce(-transform.forward * movementSpeed);
+    }
+
+    void AnimationSpeedUpdate()
+    {
+        float speed = rigid.velocity.magnitude / 10.0f;
+
+        if (speed > 1.1f)
+        {
+            speed *= 5.0f;
         }
+
+        float animSpeed = speed;
+        anim.speed = animSpeed;
     }
 
     void OnCollisionEnter(Collision col)
     {
         if (!col.transform.GetComponent<FlockMember>())
         {
-            manager.RemoveFlockMember(this.gameObject);
+            BirbController controller = GetComponent<BirbController>();
+
+            if (controller.enabled)
+            {
+                controller.enabled = false;
+                //manager.UpdateLeader();
+            }
+
+            manager.RemoveFlockMember(this.gameObject);            
+
             rigid.useGravity = true;
-            Destroy(this.gameObject, 5);
+            Destroy(this.gameObject, 3);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (isLeader)
+        {
+            //todo: collision layer
+            Debug.Log(other.gameObject.name);
+            var comp = other.GetComponent<FoliageSpawner>();
+            if (comp)
+            {
+                comp.DestroyTile(transform);
+            }
         }
     }
 
     public void SetManager(FlockManager _manager)
     {
         manager = _manager;
+    }
+
+    public void SetIsLeader(bool _ldr)
+    {
+        isLeader = _ldr;
     }
 }
