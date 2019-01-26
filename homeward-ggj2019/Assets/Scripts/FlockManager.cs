@@ -151,6 +151,10 @@ public class FlockManager : MonoBehaviour
 
                     flockMembers[j].GetComponent<Rigidbody>().AddForce(targetPos * speed);
                 }
+                if (Vector3.Distance(flockMembers[j].transform.position, positionOffsets[j]) > 3.0f)
+                {
+                    flockMembers[j].GetComponent<Rigidbody>().AddForce(transform.up * (Random.Range(1, 5)));
+                }
             }
 
             
@@ -214,9 +218,21 @@ public class FlockManager : MonoBehaviour
             if (flockMembers[i] == _bird)
             {
                 flockMembers.RemoveAt(i);
+
+                for (int j = i; j < flockMembers.Count; j++)
+                {
+                    flockMembers[j].GetComponent<Rigidbody>().AddForce(transform.up * (Random.Range(2, 6)), ForceMode.Impulse);
+                }
             }
         }
     }    
+
+    public void AddNewFlockMember(GameObject _bird)
+    {
+        Debug.Log("cheese");
+        flockMembers.Add(_bird);
+        _bird.GetComponent<Rigidbody>().AddForce(transform.up * (Random.Range(8, 10)), ForceMode.Impulse);
+    }
 
     public void UpdateLeader()
     {

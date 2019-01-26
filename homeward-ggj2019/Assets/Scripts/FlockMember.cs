@@ -30,17 +30,20 @@ public class FlockMember : MonoBehaviour
 
     void AnimationSpeedUpdate()
     {
-        transform.rotation = Quaternion.Euler(new Vector3(0, 180, manager.leader.GetComponent<Rigidbody>().velocity.x));
-
-        float speed = rigid.velocity.magnitude / 10.0f;
-
-        if (speed > 1)
+        if (manager)
         {
-            speed *= 5.0f;
-        }
+            transform.rotation = Quaternion.Euler(new Vector3(0, 180, manager.leader.GetComponent<Rigidbody>().velocity.x));
 
-        float animSpeed = speed;
-        anim.speed = animSpeed;
+            float speed = rigid.velocity.magnitude / 10.0f;
+
+            if (speed > 1)
+            {
+                speed *= 5.0f;
+            }
+
+            float animSpeed = speed;
+            anim.speed = animSpeed;
+        }
     }
 
     void OnCollisionEnter(Collision col)
@@ -64,10 +67,22 @@ public class FlockMember : MonoBehaviour
             Destroy(this.gameObject, 3);
             this.enabled = false;
         }
+        else
+        {
+            FlockMember brd = col.transform.GetComponent<FlockMember>();
+            if (!brd.GetManager())
+            {
+                brd.AddToFlock(manager);
+            }
+        }
     }
     public void SetManager(FlockManager _manager)
     {
         manager = _manager;
+    }
+    public FlockManager GetManager()
+    {
+        return manager;
     }
     public void SetIsLeader(bool _ldr)
     {
@@ -80,5 +95,10 @@ public class FlockMember : MonoBehaviour
     public void SetSpeed(float _spd)
     {
         movementSpeed = _spd;
+    }
+    public void AddToFlock(FlockManager _manager)
+    {
+        manager = _manager;
+        manager.AddNewFlockMember(this.gameObject);
     }
 }
