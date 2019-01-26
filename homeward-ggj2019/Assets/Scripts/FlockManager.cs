@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class FlockManager : MonoBehaviour    
 {
@@ -25,7 +26,7 @@ public class FlockManager : MonoBehaviour
     [SerializeField] float flyingHeight = 10.0f;
 
     private float delayTimer = 0.0f;
-    private float delayTimerMax = 3.0f;
+    private float delayTimerMax = 1.0f;
     private bool delayOn = false;
 
     public static FlockManager Instance = null;
@@ -61,6 +62,8 @@ public class FlockManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        CheckGameOver();
+
         Avoid();
 
         if (delayOn)
@@ -78,6 +81,17 @@ public class FlockManager : MonoBehaviour
         else
         {
             Seek();
+        }
+    }
+
+    void CheckGameOver()
+    {
+        if (flockMembers.Count < 1)
+        {
+            if (!leader)
+            {
+                SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
+            }
         }
     }
 
@@ -229,23 +243,29 @@ public class FlockManager : MonoBehaviour
 
     public void AddNewFlockMember(GameObject _bird)
     {
-        Debug.Log("cheese");
         flockMembers.Add(_bird);
         _bird.GetComponent<Rigidbody>().AddForce(transform.up * (Random.Range(8, 10)), ForceMode.Impulse);
     }
 
     public void UpdateLeader()
     {
-        delayOn = true;
+        if (flockMembers.Count > 0)
+        {
+            delayOn = true;
 
-        flockMembers[0].GetComponent<BirdController>().enabled = true;
-        flockMembers[0].GetComponent<FlockMember>().SetIsLeader(true);
+            flockMembers[0].GetComponent<BirdController>().enabled = true;
+            flockMembers[0].GetComponent<FlockMember>().SetIsLeader(true);
 
-        main_cam.GetComponent<LazyCamera>().UpdateTarget(flockMembers[0]);
+            main_cam.GetComponent<LazyCamera>().UpdateTarget(flockMembers[0]);
 
-        leader = flockMembers[0];
+            leader = flockMembers[0];
 
-        flockMembers.RemoveAt(0);        
+            flockMembers.RemoveAt(0);
+        }
+        else
+        {
+            CheckGameOver();
+        }
     }
 
     public void SetFlyingHeight(float _height)

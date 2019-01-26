@@ -11,6 +11,8 @@ public class FlockMember : MonoBehaviour
     [SerializeField] bool isLeader = false;
     [SerializeField] float movementSpeed = 1.0f;
 
+    [SerializeField] GameObject deathExplosionPrefab;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -50,6 +52,8 @@ public class FlockMember : MonoBehaviour
     {
         if (!col.transform.GetComponent<FlockMember>())
         {
+            Instantiate(deathExplosionPrefab, transform.position, transform.rotation);
+
             BirdController controller = GetComponent<BirdController>();
 
             if (controller.enabled)
@@ -63,9 +67,7 @@ public class FlockMember : MonoBehaviour
                 manager.RemoveFlockMember(this.gameObject);
             }
 
-            rigid.useGravity = true;            
-            Destroy(this.gameObject, 3);
-            this.enabled = false;
+            Destroy(this.gameObject);
         }
         else
         {
