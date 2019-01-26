@@ -14,7 +14,7 @@ public class Biome : MonoBehaviour
     
 
 
-    public BiomeType BiomeType = BiomeType.NONE;
+    public BiomeType BiomeType = BiomeType.MODERATE;
     // Start is called before the first frame update
     void Start()
     {

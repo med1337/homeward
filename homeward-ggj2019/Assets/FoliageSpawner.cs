@@ -41,6 +41,7 @@ public class FoliageSpawner : MonoBehaviour
         switch (type)
         {
             case BiomeType.NONE:
+                StartCoroutine(SpawnGrass());
                 break;
             case BiomeType.MODERATE:
                 StartCoroutine(SpawnMaximumTrees());
@@ -188,7 +189,6 @@ public class FoliageSpawner : MonoBehaviour
         {
             if (counter > 3)
             {
-
                 StartCoroutine(SpawnBuildingCR());
                 yield break;
             }

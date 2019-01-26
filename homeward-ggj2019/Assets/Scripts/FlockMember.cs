@@ -30,7 +30,11 @@ public class FlockMember : MonoBehaviour
 
     void AnimationSpeedUpdate()
     {
-        transform.rotation = Quaternion.Euler(new Vector3(0, 180, manager.leader.GetComponent<Rigidbody>().velocity.x));
+        if (gameObject != manager.leader)
+        {
+            transform.rotation = manager.leader.transform.rotation;
+
+        }
 
         float speed = rigid.velocity.magnitude / 10.0f;
 
