@@ -20,10 +20,18 @@ public class FlockMember : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (rigid.velocity.magnitude > 15.0f)
+        //if (rigid.velocity.magnitude > 15.0f)
         {
-            float animSpeed = 1.0f;
-            animSpeed += (rigid.velocity.magnitude * rigid.velocity.magnitude) * 0.05f;
+            float speed = rigid.velocity.magnitude / 10.0f;
+            
+            if (speed > 1.1f)
+            {
+                speed *= 5.0f;
+            }
+
+            float animSpeed = speed;
+            //float animSpeed = 1.0f;
+            //animSpeed += (rigid.velocity.magnitude * rigid.velocity.magnitude) * 0.05f;
             anim.speed = animSpeed;
         }
     }
