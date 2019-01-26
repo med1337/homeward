@@ -9,6 +9,8 @@ public class FlockManager : MonoBehaviour
     [SerializeField] public GameObject leader;
     [SerializeField] List<GameObject> flockMembers;
     [SerializeField] Camera main_cam;
+    [SerializeField] Score score;
+    [SerializeField] GameplayManager gameManager;
 
     [Header("Parameters")]
     [SerializeField] float flightSpeed = 15.0f;
@@ -48,7 +50,7 @@ public class FlockManager : MonoBehaviour
             Destroy(gameObject);
 
         //Sets this to not be destroyed when reloading scene
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
 
        
     }
@@ -85,15 +87,18 @@ public class FlockManager : MonoBehaviour
     }
 
     void CheckGameOver()
-    {
+    {        
         if (flockMembers.Count < 1)
         {
             if (!leader)
             {
-                SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
+                if (gameManager)
+                {
+                    gameManager.GameOver();
+                }
             }
         }
-    }
+    }   
 
     void SetOffsetPositions()
     {

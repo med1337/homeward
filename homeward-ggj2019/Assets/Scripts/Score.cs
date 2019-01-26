@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Score : MonoBehaviour
 {
@@ -21,13 +22,6 @@ public class Score : MonoBehaviour
         PauseButton.onClick.AddListener(PauseClicked);
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
-    {
-        //when the ducks die, call:
-        //StopCoroutine(coroutine);
-    }
-
     private IEnumerator IncrementScore(float waitTime)
     {
         while (true)
@@ -38,7 +32,7 @@ public class Score : MonoBehaviour
         }
     }
 
-    void PauseClicked()
+    public void PauseClicked()
     {
         if(!GamePaused)
         {
@@ -52,5 +46,14 @@ public class Score : MonoBehaviour
             PauseButton.image.sprite = buttonImages[0];
             GamePaused = false;
         }
+    }
+    public void RestartLevel()
+    {
+        SceneManager.LoadScene("Main", LoadSceneMode.Single);
+    }
+
+    public void ExitToMenu()
+    {
+        SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
     }
 }
