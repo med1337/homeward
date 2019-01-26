@@ -315,10 +315,10 @@ public class FlockManager : MonoBehaviour
     {
         camShake.ShakeCam(boostTimerMax, 0.3f);
 
-        foreach(GameObject bird in flockMembers)
-        {
-            bird.GetComponent<FlockMember>().SetInvunerable(true);
-        }
+        //foreach(GameObject bird in flockMembers)
+        //{
+        //    bird.GetComponent<FlockMember>().SetInvunerable(true);
+        //}
 
         boostOn = true;
         flightSpeed += 100.0f;
