@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BirbController : MonoBehaviour
+public class BirdController : MonoBehaviour
 {
     public float EdgeDistance = 5;
     public float TurnRotation = 30;
@@ -39,7 +39,7 @@ public class BirbController : MonoBehaviour
 
         currentAngle = new Vector3(
         Mathf.LerpAngle(currentAngle.x, targetAngle.x, Time.deltaTime),
-        Mathf.LerpAngle(currentAngle.y, targetAngle.y, Time.deltaTime),
+        180,
         Mathf.LerpAngle(currentAngle.z, targetAngle.z, Time.deltaTime));
         transform.eulerAngles = currentAngle;
 

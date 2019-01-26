@@ -45,7 +45,7 @@ public class FlockMember : MonoBehaviour
     {
         if (!col.transform.GetComponent<FlockMember>())
         {
-            BirbController controller = GetComponent<BirbController>();
+            BirdController controller = GetComponent<BirdController>();
 
             if (controller.enabled)
             {

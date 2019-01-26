@@ -185,7 +185,7 @@ public class FlockManager : MonoBehaviour
     {
         delayOn = true;
 
-        flockMembers[0].GetComponent<BirbController>().enabled = true;
+        flockMembers[0].GetComponent<BirdController>().enabled = true;
         flockMembers[0].GetComponent<FlockMember>().SetIsLeader(true);
 
         main_cam.GetComponent<LazyCamera>().UpdateTarget(flockMembers[0]);

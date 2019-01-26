@@ -289,7 +289,6 @@ public class FoliageSpawner : MonoBehaviour
             distance = Vector3.Distance(_transform.position, transform.position);
             yield return null;
         }
-        GetComponentInParent<PlaneSpawner>().SpawnTile();
         Destroy(gameObject);
     }
 
