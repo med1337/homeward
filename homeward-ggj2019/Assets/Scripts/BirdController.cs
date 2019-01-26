@@ -16,7 +16,7 @@ public class BirdController : MonoBehaviour
     private Rigidbody rigid;
     private Vector2 fingerUpPosition;
     private Vector2 fingerDownPosition;
-    public float extraPower = 0.0f;
+    public float extraPower = 1.0f;
     public float desiredX = 0.0f;
 
     private void Start()
@@ -62,6 +62,10 @@ public class BirdController : MonoBehaviour
             //    Debug.Log(forceApplied);
             //}
         }
+        if (Input.GetKey(KeyCode.A))
+            forceApplied = -1;
+        if (Input.GetKey(KeyCode.D))
+            forceApplied = 1;
     }
 
     void FixedUpdate()
@@ -82,10 +86,7 @@ public class BirdController : MonoBehaviour
         ////        forceApplied = -100;
         ////}
 
-        //if (Input.GetKey(KeyCode.A))
-        //    forceApplied = -100;
-        //if (Input.GetKey(KeyCode.D))
-        //    forceApplied = 100;
+       
 
         //Slowly increment towards target velocity
         //if (forceApplied < moveForce)
