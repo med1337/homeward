@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Android;
 
 public class Parallax : MonoBehaviour
 {
@@ -24,7 +25,7 @@ public class Parallax : MonoBehaviour
 
     // Update is called once per frame
     private void LateUpdate()
-    {
+    { 
         for (int i = 0; i < backgrounds.Length; i++)
         {
             Vector3 parallax = (previousCamPos - transform.position) * (parallaxScales[i] / smoothing);
@@ -33,4 +34,6 @@ public class Parallax : MonoBehaviour
 
         previousCamPos = transform.position;
     }
+
+    
 }

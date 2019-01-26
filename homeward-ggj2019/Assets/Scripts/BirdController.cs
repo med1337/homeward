@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BirbController : MonoBehaviour
+public class BirdController : MonoBehaviour
 {
     public float EdgeDistance = 5;
     public float TurnRotation = 30;

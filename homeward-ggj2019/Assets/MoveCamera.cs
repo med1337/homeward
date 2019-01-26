@@ -23,5 +23,14 @@ public class MoveCamera : MonoBehaviour
         {
             transform.Translate(new Vector3(moveSpeed, 0.0f, 0.0f));
         }
+
+        //turn this in to translate???
+        transform.Translate(new Vector3(GyroToUnity(Input.gyro.attitude).z, 0.0f,0.0f));
+
+    }
+
+    private static Quaternion GyroToUnity(Quaternion q)
+    {
+        return new Quaternion(q.x, q.y, -q.z, -q.w);
     }
 }
