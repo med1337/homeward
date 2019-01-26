@@ -53,7 +53,10 @@ public class FlockMember : MonoBehaviour
                 //manager.UpdateLeader();
             }
 
-            manager.RemoveFlockMember(this.gameObject);            
+            if (manager)
+            {
+                manager.RemoveFlockMember(this.gameObject);
+            }
 
             rigid.useGravity = true;
             Destroy(this.gameObject, 3);
