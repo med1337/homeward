@@ -64,6 +64,6 @@ public class BirbController : MonoBehaviour
             moveForce -= Responsiveness*2;
 
         //Apply updated velocity        
-        rigid.velocity = new Vector3(moveForce/10, 0, rigid.velocity.z);
+        rigid.velocity = new Vector3(moveForce/10, rigid.velocity.y, rigid.velocity.z);
     }
 }
