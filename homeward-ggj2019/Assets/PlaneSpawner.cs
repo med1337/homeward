@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlaneSpawner : MonoBehaviour
 {
     [SerializeField] private GameObject biomePrefab;
+    [SerializeField] private GameObject birdPowerUp;
     [SerializeField] private GameObject rowPrefab;
     private GameObject currentBiome;
     private GameObject nextBiome;
@@ -135,6 +136,7 @@ public class PlaneSpawner : MonoBehaviour
         }
         if (index == 14)
         {
+            
             switch ((BiomeType)Level)
             {
                 case BiomeType.NONE:
@@ -161,6 +163,14 @@ public class PlaneSpawner : MonoBehaviour
                 case BiomeType.SNOW:
                     FlockManager.Instance.SetFlyingHeight(15f);
                     break;
+            }
+            var chance = 100f;
+            var random = Random.Range(0, 100f);
+            if (random < chance)
+            {
+                //spawn
+                var go = Instantiate(birdPowerUp);
+                go.transform.position = new Vector3(Random.Range(-15,15), FlockManager.Instance.GetFlyingHeight(), nextBiome.transform.position.z);
             }
         }
         if (nextBiome!=currentBiome)

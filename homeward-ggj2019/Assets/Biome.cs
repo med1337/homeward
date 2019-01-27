@@ -194,8 +194,12 @@ public class Biome : MonoBehaviour
 
     public void PopulateRow()
     {
-        var row = Rows[rowcounter];
-        row.SpawnStuff();
-        rowcounter++;
+        if (rowcounter < Rows.Count)
+        {
+            var row = Rows[rowcounter];
+            row.SpawnStuff();
+            rowcounter++;
+
+        }
     }
 }
