@@ -63,8 +63,13 @@ public class PlaneSpawner : MonoBehaviour
     public void PopulateNextBiome()
     {
         Level++;
+        biomCounter++;
+        if (Level == 6)
+        {
+            Level = 1;
+        }
         nextBiome = GameObject.Instantiate(biomePrefab, transform.GetChild(0));
-        nextBiome.transform.position += transform.forward * 150 * (Level-1);
+        nextBiome.transform.position += transform.forward * 150 * (biomCounter-1);
         nextBiome.GetComponent<Biome>().Init(width, rowPrefab, tilePrefab);
     }
    

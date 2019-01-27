@@ -45,6 +45,7 @@ public class Row : MonoBehaviour
         {
             var go = GameObject.Instantiate(tilePrefab, transform);
             gameObjects.Add(go);
+            go.GetComponent<Tile>().Init(biomeType);
             if (Mathf.Abs(i) >= (width - 5) / 2)
             {
                 go.GetComponent<BarrierSpawner>().Populate(biomeType);

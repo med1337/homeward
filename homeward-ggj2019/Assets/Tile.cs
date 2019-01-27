@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -35,6 +36,7 @@ public class Tile : MonoBehaviour
     }
 
 
+
     public void ScanNeighbours()
     {
         if (TileType == TileType.BARRIER) return;
@@ -51,4 +53,9 @@ public class Tile : MonoBehaviour
         }
     }
 
+    public void Init(BiomeType biomeType)
+    {
+        var groundComponent = GetComponent<GroundSpawner>();
+        groundComponent.ReplaceGround(biomeType);
+    }
 }
