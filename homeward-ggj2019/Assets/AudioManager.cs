@@ -62,7 +62,7 @@ public class AudioManager : MonoBehaviour
         switch (biome)
         {
             case "Forest":
-                //ambientSource.clip;
+                return;
                 break;
             case "Ocean":
                 sourceAvailable.clip = GetAudioClip("OceanWaves");
