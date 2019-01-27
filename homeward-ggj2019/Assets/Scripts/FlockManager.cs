@@ -289,7 +289,7 @@ public class FlockManager : MonoBehaviour
             }
         }
 
-        distanceTravelled2 = 0.0f;
+        distanceTravelled2 *= 0.6f;
         camShake.ShakeCam(0.2f, 0.5f);
     }
 
@@ -346,5 +346,11 @@ public class FlockManager : MonoBehaviour
         }
 
         flightSpeed /= 2;
+    }
+
+
+    public float GetFlyingHeight()
+    {
+        return flyingHeight;
     }
 }

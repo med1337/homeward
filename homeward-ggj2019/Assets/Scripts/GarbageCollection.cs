@@ -6,15 +6,26 @@ public class GarbageCollection : MonoBehaviour
 {
     // Start is called before the first frame update
 
-    [SerializeField] float destroyAfterSeconds = 5.0f;
+    private float destroyAfterSeconds = 10.0f;
+    private float timer = 0.0f;
     void Start()
     {
-        Destroy(this.gameObject, destroyAfterSeconds);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        timer += Time.deltaTime;
+        if (timer > destroyAfterSeconds)
+        {
+            Destroy(gameObject);
+        }
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Destroy(gameObject,3);
+    }
+
+
 }
