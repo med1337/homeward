@@ -12,11 +12,11 @@ public class FlockMember : MonoBehaviour
     [SerializeField] float movementSpeed = 1.0f;
 
     [SerializeField] GameObject deathExplosionPrefab;
-    public GameObject AudioManagerRef; 
     public AudioClip[] BirbSounds;
     public AudioClip[] BirbDeathSounds; 
     private bool invunerable = false;
 
+    private float quackTime;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,6 +24,7 @@ public class FlockMember : MonoBehaviour
         anim = GetComponent<Animator>();
         AnimatorStateInfo state = anim.GetCurrentAnimatorStateInfo(0);
         anim.Play(state.fullPathHash, -1, Random.Range(0f, 1f));
+        quackTime = Random.Range(1, 10);
     }
 
     // Update is called once per frame
@@ -32,6 +33,12 @@ public class FlockMember : MonoBehaviour
         AnimationSpeedUpdate();
 
         rigid.AddForce(-transform.forward * movementSpeed);
+
+        if (Time.time > quackTime)
+        {
+            AudioManager.instance.PlaySingle(BirbSounds[Random.Range(0, BirbSounds.Length)]);
+            quackTime = Time.time + Random.Range(1, 10);
+        }
     }
 
     void AnimationSpeedUpdate()
