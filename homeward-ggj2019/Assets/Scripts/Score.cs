@@ -26,7 +26,8 @@ public class Score : MonoBehaviour
     {
         while (true)
         {
-            ScoreText.text = ((int)FlockManager.Instance.distanceTravelled).ToString() +" ft";
+            score = (int) FlockManager.Instance.distanceTravelled;
+            ScoreText.text = (score).ToString() +" M";
             yield return null;
         }
     }

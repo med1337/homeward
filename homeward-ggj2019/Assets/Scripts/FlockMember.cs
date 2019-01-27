@@ -137,6 +137,8 @@ public class FlockMember : MonoBehaviour
         {
             Destroy(transform.Find("Sparkles").gameObject);
         }
+
+        AudioManager.instance.PlaySingle(BirbSounds[Random.Range(0, BirbSounds.Length)]);
     }
     public void SetInvunerable(bool _in)
     {

@@ -148,7 +148,7 @@ public class Row : MonoBehaviour
                     //tree.density = 1.5f;
                     break;
                 case BiomeType.VOLCANO:
-                    foliage.SpawnRandomGameObject(biomeType, 2);
+                    foliage.SpawnRandomGameObject(biomeType, 1);
                     break;
                 case BiomeType.MOUNTAIN:
                     foliage.SpawnRandomGameObject(biomeType, 3);
