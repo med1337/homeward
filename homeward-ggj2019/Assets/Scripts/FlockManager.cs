@@ -186,7 +186,7 @@ public class FlockManager : MonoBehaviour
 
     void Seek()
     {
-        speed = flightSpeed + distanceTravelled / 100;
+        speed = flightSpeed + distanceTravelled / 50;
         if (leader)
         {
             
@@ -228,11 +228,11 @@ public class FlockManager : MonoBehaviour
             {
                 if (leader.transform.position.y < flyingHeight)
                 {
-                    leader.GetComponent<Rigidbody>().AddForce(transform.up * (seekStrength * 2));
+                    leader.GetComponent<Rigidbody>().AddForce(transform.up * 2 * (seekStrength * 2));
                 }
                 else
                 {
-                    leader.GetComponent<Rigidbody>().AddForce(-transform.up * 5 * (seekStrength * 2));
+                    leader.GetComponent<Rigidbody>().AddForce(-transform.up * 2 * (seekStrength * 2));
                 }
             }
 
