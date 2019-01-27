@@ -25,16 +25,20 @@ public class Row : MonoBehaviour
         var comp = other.GetComponent<Camera>();
         if (comp)
         {
-            StartCoroutine(DisableRow());
+            StartCoroutine(DisableRow(other.transform));
         }
     }
 
 
-    private IEnumerator DisableRow()
+    private IEnumerator DisableRow(Transform other)
     {
         //PlaneSpawner.Instance.SpawnRow();
-        yield return new WaitForSeconds(1f);
-        gameObject.SetActive(false);
+        while (Vector3.Distance(other.position, transform.position)<70f)
+        {
+            yield return new WaitForSeconds(1f);
+        }
+        Destroy(gameObject);
+        //gameObject.SetActive(false);
     }
 
 

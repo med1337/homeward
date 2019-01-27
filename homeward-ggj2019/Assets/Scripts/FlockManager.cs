@@ -186,13 +186,10 @@ public class FlockManager : MonoBehaviour
 
     void Seek()
     {
-        speed = flightSpeed + distanceTravelled / 10;
+        speed = flightSpeed + distanceTravelled / 50;
         if (leader)
         {
-            if (leader.GetComponent<FlockMember>().GetSpeed() != speed)
-            {
-                leader.GetComponent<FlockMember>().SetSpeed(speed);
-            }
+            
             UpdateOffsetPositions();
 
             for (int j = 0; j < flockMembers.Count; j++)
@@ -200,9 +197,9 @@ public class FlockManager : MonoBehaviour
                 FlockMember bird = flockMembers[j].GetComponent<FlockMember>();
                 
                 //Debug.Log(spd);
-                if (bird.GetSpeed() != flightSpeed)
+                if (bird.GetSpeed() != speed)
                 {
-                    bird.SetSpeed(flightSpeed);
+                    bird.SetSpeed(speed);
                 }
 
                 if (Vector3.Distance(flockMembers[j].transform.position, positionOffsets[j]) > 0.5f)
@@ -231,19 +228,19 @@ public class FlockManager : MonoBehaviour
             {
                 if (leader.transform.position.y < flyingHeight)
                 {
-                    leader.GetComponent<Rigidbody>().AddForce(transform.up * (seekStrength * 2));
+                    leader.GetComponent<Rigidbody>().AddForce(transform.up * 2 * (seekStrength * 2));
                 }
                 else
                 {
-                    leader.GetComponent<Rigidbody>().AddForce(-transform.up * 5 * (seekStrength * 2));
+                    leader.GetComponent<Rigidbody>().AddForce(-transform.up * 2 * (seekStrength * 2));
                 }
             }
 
             FlockMember ldr = leader.GetComponent<FlockMember>();
 
-            if (ldr.GetSpeed() != flightSpeed)
+            if (ldr.GetSpeed() != speed)
             {
-                ldr.SetSpeed(flightSpeed);
+                ldr.SetSpeed(speed);
             }
         }
     }
@@ -312,6 +309,7 @@ public class FlockManager : MonoBehaviour
             main_cam.GetComponent<LazyCamera>().UpdateTarget(flockMembers[0]);
 
             leader = flockMembers[0];
+            leader.transform.GetChild(0).GetComponent<SkinnedMeshRenderer>().materials[0].color = Color.white;
 
             flockMembers.RemoveAt(0);
         }
