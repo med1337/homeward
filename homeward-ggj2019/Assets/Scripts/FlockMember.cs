@@ -12,7 +12,9 @@ public class FlockMember : MonoBehaviour
     [SerializeField] float movementSpeed = 1.0f;
 
     [SerializeField] GameObject deathExplosionPrefab;
-
+    public GameObject AudioManagerRef; 
+    public AudioClip[] BirbSounds;
+    public AudioClip[] BirbDeathSounds; 
     private bool invunerable = false;
 
     // Start is called before the first frame update
@@ -82,8 +84,10 @@ public class FlockMember : MonoBehaviour
                 {
                     manager.RemoveFlockMember(this.gameObject);
                 }
-
-                Destroy(this.gameObject);
+                AudioManagerRef.GetComponent<AudioManager>().PlaySingle(BirbDeathSounds[1]);
+                AudioManagerRef.GetComponent<AudioManager>().PlaySingle(BirbSounds[Random.Range(0, BirbSounds.Length)]);
+                AudioManagerRef.GetComponent<AudioManager>().PlaySingle(BirbDeathSounds[0]);
+                Destroy(this.gameObject);            
             }
             else
             {

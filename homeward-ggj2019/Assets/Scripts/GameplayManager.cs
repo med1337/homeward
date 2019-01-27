@@ -10,7 +10,10 @@ public class GameplayManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        if (PlayerPrefs.GetInt("MusicToggle") == 0)
+            transform.GetComponent<AudioSource>().enabled = false;
+        else
+            transform.GetComponent<AudioSource>().enabled = true;
     }
 
     // Update is called once per frame
