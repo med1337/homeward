@@ -24,6 +24,9 @@ public class Biome : MonoBehaviour
 
     public List<Tile> SpawnableTiles = new List<Tile>();
 
+    private int width;
+    private GameObject tilePrefab;
+    private int rowcounter = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -35,39 +38,40 @@ public class Biome : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        var comp = other.GetComponent<Camera>();
-        if (comp)
-        {
-            PlaneSpawner.Instance.PopulateNextBiome();
-            switch (BiomeType)
-            {
-                case BiomeType.NONE:
-                    break;
-                case BiomeType.MODERATE:
-                    FlockManager.Instance.SetFlyingHeight(10f);
-                    break;
-                case BiomeType.LAKE:
-                    FlockManager.Instance.SetFlyingHeight(4f);
-                    break;
-                case BiomeType.DESERT:
-                    FlockManager.Instance.SetFlyingHeight(4f);
-                    break;
-                case BiomeType.VOLCANO:
-                    FlockManager.Instance.SetFlyingHeight(4f);
-                    break;
-                case BiomeType.MOUNTAIN:
-                    FlockManager.Instance.SetFlyingHeight(14f);
-                    break;
-                case BiomeType.SNOW:
-                    FlockManager.Instance.SetFlyingHeight(15f);
-                    break;
-            }
-        }
+        //var comp = other.GetComponent<Camera>();
+        //if (comp)
+        //{
+        //    PlaneSpawner.Instance.PopulateNextBiome();
+        //    switch (BiomeType)
+        //    {
+        //        case BiomeType.NONE:
+        //            break;
+        //        case BiomeType.MODERATE:
+        //            FlockManager.Instance.SetFlyingHeight(7f);
+        //            break;
+        //        case BiomeType.LAKE:
+        //            FlockManager.Instance.SetFlyingHeight(4f);
+        //            break;
+        //        case BiomeType.DESERT:
+        //            FlockManager.Instance.SetFlyingHeight(4f);
+        //            break;
+        //        case BiomeType.VOLCANO:
+        //            FlockManager.Instance.SetFlyingHeight(4f);
+        //            break;
+        //        case BiomeType.MOUNTAIN:
+        //            FlockManager.Instance.SetFlyingHeight(14f);
+        //            break;
+        //        case BiomeType.SNOW:
+        //            FlockManager.Instance.SetFlyingHeight(15f);
+        //            break;
+        //    }
+        //}
 
     }
 
 
-    public void Init(int width, GameObject rowPrefab, GameObject tilePrefab)
+
+    public void Init(int width, GameObject rowPrefab, GameObject tilePrefab, bool firstBiome = false)
     {
         BiomeType = (BiomeType)PlaneSpawner.Instance.Level;
         gameObject.name = BiomeType.ToString();
@@ -76,91 +80,109 @@ public class Biome : MonoBehaviour
             var row = Instantiate(rowPrefab, transform);
             row.transform.position += transform.forward * 10f * i;
             row.name = "Row" + i;
-            var rowComponent =
-                row.GetComponent<Row>();
+            var rowComponent =row.GetComponent<Row>();
+            rowComponent.index = i;
             rowComponent.SpawnTiles(width, tilePrefab, BiomeType);
             Rows.Add(rowComponent);
 
         }
-
-        var chance = 10 + FlockManager.Instance.speed;
         //PlaneSpawner.Instance.SpawnBiome();
-
+        
         foreach (var row in Rows)
         {
-            foreach (var rowGameObject in row.gameObjects)
-            {
-                var tile = rowGameObject.GetComponent<Tile>();
-                tile.ScanNeighbours();
-                if (tile.emptyNeightbours >= 2)
-                {
-                    SpawnableTiles.Add(tile);
-                }
-            }
+            row.ScanNeighbours();
+            //foreach (var rowGameObject in row.gameObjects)
+            //{
+            //    var tile = rowGameObject.GetComponent<Tile>();
+            //    tile.ScanNeighbours();
+            //    if (tile.emptyNeightbours >= 2)
+            //    {
+            //        SpawnableTiles.Add(tile);
+            //    }
+            //}
         }
 
 
-        for (int i = 0; i < 15; i++)
+        if (firstBiome)
         {
-            var rnd = Random.Range(0, 100);
-            if (rnd < chance)
+            foreach (var row in Rows)
             {
-                var rndIndex = Random.Range(0, 5);
-                var index = (i * 5) + rndIndex;
-                SpawnableTiles[index].GetComponent<ObstacleSpawner>().SpawnRandomGameObject(BiomeType);
-                //i += Random.Range(3, 5);
+                PopulateRow();
             }
         }
+        //if (firstBiome)
+        //{
+        //    var chance = 10 + FlockManager.Instance.speed;
+        //    for (int i = 0; i < 15; i++)
+        //    {
+        //        var rnd = Random.Range(0, 100);
+        //        if (rnd < chance)
+        //        {
+        //            var rndIndex = Random.Range(0, 5);
+        //            var index = (i * 5) + rndIndex;
+        //            SpawnableTiles[index].GetComponent<ObstacleSpawner>().SpawnRandomGameObject(BiomeType);
+        //            //i += Random.Range(3, 5);
+        //        }
+        //    }
 
-        foreach (var row in Rows)
-        {
+        //    foreach (var row in Rows)
+        //    {
 
-            foreach (var rowGameObject in row.gameObjects)
-            {
-                if (rowGameObject.GetComponent<Tile>().TileType != TileType.BARRIER)
-                {
-                    var rnd = Random.Range(0, 100);
-                    if (rnd < chance)
-                    {
-                        var tree = rowGameObject.GetComponent<TreeSpawner>();
-                        var foliage = rowGameObject.GetComponent<Foliage2Spawner>();
-                        switch (BiomeType)
-                        {
-                            case BiomeType.NONE:
-                                break;
-                            case BiomeType.MODERATE:
-                                //tile.density = 0.1f;
-                                tree.SpawnRandomGameObject(BiomeType, 2);
-                                foliage.SpawnRandomGameObject(BiomeType, 5);
-                                break;
-                            case BiomeType.LAKE:
-                                break;
-                            case BiomeType.DESERT:
-                                tree.density = 1f;
-                                tree.SpawnRandomGameObject(BiomeType, 1);
-                                break;
-                            case BiomeType.VOLCANO:
-                                break;
-                            case BiomeType.MOUNTAIN:
-                                tree.SpawnRandomGameObject(BiomeType, 1);
-                                foliage.SpawnRandomGameObject(BiomeType, 3);
-                                break;
-                            case BiomeType.SNOW:
-                                tree.density = 0.01f;
-                                tree.SpawnRandomGameObject(BiomeType, 2);
-                                break;
-                            default:
-                                throw new ArgumentOutOfRangeException();
-                        }
-                    }
-                }
-              
+        //        foreach (var rowGameObject in row.gameObjects)
+        //        {
+        //            if (rowGameObject.GetComponent<Tile>().TileType != TileType.BARRIER)
+        //            {
+        //                var rnd = Random.Range(0, 100);
+        //                if (rnd < chance)
+        //                {
+        //                    var tree = rowGameObject.GetComponent<TreeSpawner>();
+        //                    var foliage = rowGameObject.GetComponent<Foliage2Spawner>();
+        //                    switch (BiomeType)
+        //                    {
+        //                        case BiomeType.NONE:
+        //                            break;
+        //                        case BiomeType.MODERATE:
+        //                            //tile.density = 0.1f;
+        //                            tree.SpawnRandomGameObject(BiomeType, 2);
+        //                            foliage.SpawnRandomGameObject(BiomeType, 5);
+        //                            break;
+        //                        case BiomeType.LAKE:
+        //                            break;
+        //                        case BiomeType.DESERT:
+        //                            //tree.density = 1.5f;
+        //                            tree.SpawnRandomGameObject(BiomeType, 1);
+        //                            break;
+        //                        case BiomeType.VOLCANO:
+        //                            break;
+        //                        case BiomeType.MOUNTAIN:
+        //                            tree.SpawnRandomGameObject(BiomeType, 1);
+        //                            foliage.SpawnRandomGameObject(BiomeType, 3);
+        //                            break;
+        //                        case BiomeType.SNOW:
+        //                            //tree.density = 0.01f;
+        //                            tree.SpawnRandomGameObject(BiomeType, 2);
+        //                            break;
+        //                        default:
+        //                            throw new ArgumentOutOfRangeException();
+        //                    }
+        //                }
+        //            }
 
 
-            }
-        }
+
+        //        }
+        //    }
+        //}
+
+      
     }
 
+
+    private IEnumerator InitCoroutine()
+    {
+        yield return null;
+     
+    }
 
 
     // Update is called once per frame
@@ -169,4 +191,11 @@ public class Biome : MonoBehaviour
 
     }
 
+
+    public void PopulateRow()
+    {
+        var row = Rows[rowcounter];
+        row.SpawnStuff();
+        rowcounter++;
+    }
 }

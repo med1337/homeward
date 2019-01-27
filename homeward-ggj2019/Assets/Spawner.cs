@@ -86,7 +86,7 @@ public class Spawner : MonoBehaviour
             var so = prefab.GetComponent<SpawnedObject>();
 
             //cast a ray and check 
-            RaycastHit[] hits = Physics.SphereCastAll(new Ray(position, new Vector3(1, 1, 1)), so.radius  );
+            RaycastHit[] hits = Physics.SphereCastAll(new Ray(position, new Vector3(1, 1, 1)), so.radius * 1-density  );
             foreach (var item in hits)
             {
                 if (item.collider.gameObject.layer == prefab.gameObject.layer)
@@ -102,7 +102,7 @@ public class Spawner : MonoBehaviour
 
                         yield break;
                     }
-                    yield return null;
+                        yield return new WaitForEndOfFrame(); ;
                 }
 
             }

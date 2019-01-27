@@ -8,6 +8,11 @@ public class ParallexMenu : MonoBehaviour
     private float yVelocity = 0.0F;
     private Quaternion calibrationQuaternion;
 
+
+    void Awake()
+    {
+    }
+
     void Start()
     {
         Screen.orientation = ScreenOrientation.Portrait;

@@ -55,7 +55,8 @@ public class PlaneSpawner : MonoBehaviour
     public void SpawnBiome()
     {
         currentBiome = GameObject.Instantiate(biomePrefab, transform.GetChild(0));
-        currentBiome.GetComponent<Biome>().Init(width, rowPrefab, tilePrefab);
+        currentBiome.GetComponent<Biome>().Init(width, rowPrefab, tilePrefab,true);
+        
         nextBiome = currentBiome;
         biomCounter++;
     }
@@ -122,5 +123,43 @@ public class PlaneSpawner : MonoBehaviour
         rowCounter++;
 
 
+    }
+
+
+    public void SpawnRow(int index)
+    {
+        if (index == 5)
+        {
+
+            PopulateNextBiome();
+        }
+        if (index == 14)
+        {
+            switch ((BiomeType)Level)
+            {
+                case BiomeType.NONE:
+                    break;
+                case BiomeType.MODERATE:
+                    FlockManager.Instance.SetFlyingHeight(7f);
+                    break;
+                case BiomeType.LAKE:
+                    FlockManager.Instance.SetFlyingHeight(4f);
+                    break;
+                case BiomeType.DESERT:
+                    FlockManager.Instance.SetFlyingHeight(4f);
+                    break;
+                case BiomeType.VOLCANO:
+                    FlockManager.Instance.SetFlyingHeight(4f);
+                    break;
+                case BiomeType.MOUNTAIN:
+                    FlockManager.Instance.SetFlyingHeight(14f);
+                    break;
+                case BiomeType.SNOW:
+                    FlockManager.Instance.SetFlyingHeight(15f);
+                    break;
+            }
+        }
+        if (nextBiome!=currentBiome)
+            nextBiome.GetComponent< Biome>().PopulateRow();
     }
 }
