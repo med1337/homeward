@@ -14,6 +14,7 @@ public class Spawner : MonoBehaviour
 
     [Range(0.01f, 0.99f)] public float density;
     public MeshCollider SpawnAreaCollider;
+    public Transform parentToSpawn;
 
     [Header("GRASS, LAKE, DESERT, VOLCANO, MOUNTAIN")]
     public PrefabList[] PrefabPerBiome;
@@ -29,6 +30,22 @@ public class Spawner : MonoBehaviour
        
     }
 
+
+    public void ReplaceGround(BiomeType biomeType)
+    {
+        int index = (int)biomeType - 1;
+
+        if (PrefabPerBiome[index] == null || PrefabPerBiome[index].Prefabs == null) return;
+        if (PrefabPerBiome[index].Prefabs.Length == 0) return;
+        var go = PrefabPerBiome[index].Prefabs[Random.Range(0, PrefabPerBiome[index].Prefabs.Length)];
+
+        Destroy( parentToSpawn.GetChild(0).gameObject);
+        var ground = Instantiate(go, parentToSpawn);
+        ground.transform.localPosition=Vector3.zero;
+        ground.transform.localScale = new Vector3(510f,510f,510f);
+        ground.transform.rotation = Quaternion.Euler(-90,0,0);
+
+    }
 
     public void SpawnRandomGameObject(BiomeType biomeType)
     {

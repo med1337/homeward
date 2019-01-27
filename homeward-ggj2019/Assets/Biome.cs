@@ -45,9 +45,6 @@ public class Biome : MonoBehaviour
     {
         BiomeType = (BiomeType)PlaneSpawner.Instance.Level;
         gameObject.name = BiomeType.ToString();
-        PlaneSpawner.Instance.
-            biomCounter++;
-        gameObject.name = BiomeType.ToString();
         for (int i = 0; i < 15; i++)
         {
             var row = Instantiate(rowPrefab, transform);
@@ -92,11 +89,11 @@ public class Biome : MonoBehaviour
         foreach (var row in Rows)
         {
 
-            //foreach (var rowGameObject in row.gameObjects)
-            //{
-            //    var tile = rowGameObject.GetComponent<TreeSpawner>();
-            //    tile.SpawnRandomGameObject(BiomeType);
-            //}
+            foreach (var rowGameObject in row.gameObjects)
+            {
+                var tile = rowGameObject.GetComponent<TreeSpawner>();
+                tile.SpawnRandomGameObject(BiomeType);
+            }
         }
     }
 
