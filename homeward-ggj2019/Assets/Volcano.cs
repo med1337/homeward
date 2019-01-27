@@ -45,5 +45,7 @@ public class Volcano : MonoBehaviour
         dir.z += Random.Range(-0.5f, 0.5f);
 
         rock.GetComponent<Rigidbody>().AddForce(dir * rockSpeed * Random.Range(0.8f, 1.2f), ForceMode.Impulse);
+        if (Random.Range(1,100) > 90)
+        AudioManager.instance.PlaySingle("Explosion");
     }
 }
