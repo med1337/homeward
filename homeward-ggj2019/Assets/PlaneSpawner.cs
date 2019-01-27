@@ -23,6 +23,7 @@ public class PlaneSpawner : MonoBehaviour
     //Awake is always called before any Start functions
     void Awake()
     {
+        Application.targetFrameRate = 60;
         //Check if instance already exists
         if (Instance == null)
 
