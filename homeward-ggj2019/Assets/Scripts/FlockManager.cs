@@ -328,7 +328,7 @@ public class FlockManager : MonoBehaviour
         //}
 
         boostOn = true;
-        flightSpeed += 100.0f;
+        flightSpeed *= 2;
     }
 
     private void DisableBoost()
@@ -338,6 +338,6 @@ public class FlockManager : MonoBehaviour
             bird.GetComponent<FlockMember>().SetInvunerable(false);
         }
 
-        flightSpeed -= 100.0f;
+        flightSpeed / -2;
     }
 }
