@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public enum BiomeType
 {
@@ -10,6 +12,7 @@ public enum BiomeType
     DESERT = 3,
     VOLCANO = 4,
     MOUNTAIN = 5,
+    SNOW=6
 
 }
 
@@ -55,6 +58,9 @@ public class Biome : MonoBehaviour
                 case BiomeType.MOUNTAIN:
                     FlockManager.Instance.SetFlyingHeight(4.5f);
                     break;
+                case BiomeType.SNOW:
+                    FlockManager.Instance.SetFlyingHeight(15f);
+                    break;
             }
         }
 
@@ -77,7 +83,7 @@ public class Biome : MonoBehaviour
 
         }
 
-        var chance = 25 + PlaneSpawner.Instance.Level * PlaneSpawner.Instance.Level * PlaneSpawner.Instance.Level;
+        var chance = 100 + PlaneSpawner.Instance.Level * PlaneSpawner.Instance.Level * PlaneSpawner.Instance.Level;
         //PlaneSpawner.Instance.SpawnBiome();
 
         foreach (var row in Rows)
@@ -86,7 +92,7 @@ public class Biome : MonoBehaviour
             {
                 var tile = rowGameObject.GetComponent<Tile>();
                 tile.ScanNeighbours();
-                if (tile.emptyNeightbours == 4)
+                if (tile.emptyNeightbours >= 2)
                 {
                     SpawnableTiles.Add(tile);
                 }
@@ -94,15 +100,15 @@ public class Biome : MonoBehaviour
         }
 
 
-        for (int i = 0; i < 12; i++)
+        for (int i = 0; i < 15; i++)
         {
             var rnd = Random.Range(0, 100);
             if (rnd < chance)
             {
-                var rndIndex = Random.Range(0, 3);
-                var index = (i * 3) + rndIndex;
+                var rndIndex = Random.Range(0, 5);
+                var index = (i * 5) + rndIndex;
                 SpawnableTiles[index].GetComponent<ObstacleSpawner>().SpawnRandomGameObject(BiomeType);
-                //i += Random.Range(0, 7- PlaneSpawner.Instance.Level);
+                //i += Random.Range(3, 5);
             }
         }
 
@@ -111,30 +117,42 @@ public class Biome : MonoBehaviour
 
             foreach (var rowGameObject in row.gameObjects)
             {
-                var rnd = Random.Range(0, 100);
-                if (rnd < chance)
+                if (rowGameObject.GetComponent<Tile>().TileType != TileType.BARRIER)
                 {
-                    var tile = rowGameObject.GetComponent<TreeSpawner>();
-                    switch (BiomeType)
+                    var rnd = Random.Range(0, 100);
+                    if (rnd < chance)
                     {
-                        case BiomeType.NONE:
-                            break;
-                        case BiomeType.MODERATE:
-                            tile.density = 0.1f;
-                            break;
-                        case BiomeType.LAKE:
-                            break;
-                        case BiomeType.DESERT:
-                            tile.density = 1f;
-                            break;
-                        case BiomeType.VOLCANO:
-                            break;
-                        case BiomeType.MOUNTAIN:
-                            tile.density = 0.4f;
-                            break;
+                        var tree = rowGameObject.GetComponent<TreeSpawner>();
+                        var foliage = rowGameObject.GetComponent<Foliage2Spawner>();
+                        switch (BiomeType)
+                        {
+                            case BiomeType.NONE:
+                                break;
+                            case BiomeType.MODERATE:
+                                //tile.density = 0.1f;
+                                tree.SpawnRandomGameObject(BiomeType, 2);
+                                foliage.SpawnRandomGameObject(BiomeType, 5);
+                                break;
+                            case BiomeType.LAKE:
+                                break;
+                            case BiomeType.DESERT:
+                                tree.density = 1f;
+                                tree.SpawnRandomGameObject(BiomeType, 1);
+                                break;
+                            case BiomeType.VOLCANO:
+                                break;
+                            case BiomeType.MOUNTAIN:
+                                break;
+                            case BiomeType.SNOW:
+                                tree.density = 0.01f;
+                                tree.SpawnRandomGameObject(BiomeType, 2);
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
                     }
-                    tile.SpawnRandomGameObject(BiomeType, 1);
                 }
+              
 
 
             }

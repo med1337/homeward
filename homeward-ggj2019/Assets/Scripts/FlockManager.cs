@@ -193,6 +193,8 @@ public class FlockManager : MonoBehaviour
             {
                 FlockMember bird = flockMembers[j].GetComponent<FlockMember>();
 
+                var spd = flightSpeed + distanceTravelled / 10;
+                //Debug.Log(spd);
                 if (bird.GetSpeed() != flightSpeed)
                 {
                     bird.SetSpeed(flightSpeed);
