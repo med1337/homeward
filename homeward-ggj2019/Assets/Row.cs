@@ -91,7 +91,7 @@ public class Row : MonoBehaviour
         }
 
         //obstacles
-        var chance = 10 + FlockManager.Instance.speed;
+        var chance = 25 + FlockManager.Instance.speed;
         var rnd = Random.Range(0, 100);
         if (rnd < chance)
         {
@@ -101,11 +101,11 @@ public class Row : MonoBehaviour
 
         foreach (var obstacleTile in obstacleTiles)
         {
+            var tree = obstacleTile.GetComponent<TreeSpawner>();
+            var foliage = obstacleTile.GetComponent<Foliage2Spawner>();
             rnd = Random.Range(0, 100);
             if (rnd < chance)
             {
-                var tree = obstacleTile.GetComponent<TreeSpawner>();
-                var foliage = obstacleTile.GetComponent<Foliage2Spawner>();
                 switch (biomeType)
                 {
                     case BiomeType.NONE:
@@ -113,7 +113,6 @@ public class Row : MonoBehaviour
                     case BiomeType.MODERATE:
                         //tile.density = 0.1f;
                         tree.SpawnRandomGameObject(biomeType, 2);
-                        foliage.SpawnRandomGameObject(biomeType, 5);
                         break;
                     case BiomeType.LAKE:
                         break;
@@ -125,7 +124,6 @@ public class Row : MonoBehaviour
                         break;
                     case BiomeType.MOUNTAIN:
                         tree.SpawnRandomGameObject(biomeType, 1);
-                        foliage.SpawnRandomGameObject(biomeType, 3);
                         break;
                     case BiomeType.SNOW:
                         //tree.density = 0.01f;
@@ -134,6 +132,30 @@ public class Row : MonoBehaviour
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
+            }
+            switch (biomeType)
+            {
+                case BiomeType.NONE:
+                    break;
+                case BiomeType.MODERATE:
+                    //tile.density = 0.1f;
+                    foliage.SpawnRandomGameObject(biomeType, 2);
+                    break;
+                case BiomeType.LAKE:
+                    break;
+                case BiomeType.DESERT:
+                    //tree.density = 1.5f;
+                    break;
+                case BiomeType.VOLCANO:
+                    break;
+                case BiomeType.MOUNTAIN:
+                    foliage.SpawnRandomGameObject(biomeType, 3);
+                    break;
+                case BiomeType.SNOW:
+                    //tree.density = 0.01f;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
         //other shit

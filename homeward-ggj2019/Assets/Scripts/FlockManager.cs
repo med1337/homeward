@@ -41,6 +41,7 @@ public class FlockManager : MonoBehaviour
     public static FlockManager Instance = null;
     private Vector3 startingPoint;
     public float distanceTravelled = 0.0f;
+    public float distanceTravelled2 = 0.0f;
 
     //Awake is always called before any Start functions
     void Awake()
@@ -74,8 +75,8 @@ public class FlockManager : MonoBehaviour
         CheckGameOver();
         if (leader)
         {
-            distanceTravelled += (leader.transform.position.z - startingPoint.z);
-            startingPoint = leader.transform.position;
+            distanceTravelled += (leader.transform.position.z - startingPoint.z); distanceTravelled2 += (leader.transform.position.z - startingPoint.z);
+    startingPoint = leader.transform.position;
 
         }
         Avoid();
@@ -186,7 +187,7 @@ public class FlockManager : MonoBehaviour
 
     void Seek()
     {
-        speed = flightSpeed + distanceTravelled / 50;
+        speed = flightSpeed + distanceTravelled2 / 50;
         if (leader)
         {
             
@@ -288,6 +289,7 @@ public class FlockManager : MonoBehaviour
             }
         }
 
+        distanceTravelled2 = 0.0f;
         camShake.ShakeCam(0.2f, 0.5f);
     }
 
