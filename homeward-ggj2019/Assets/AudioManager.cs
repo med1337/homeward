@@ -6,10 +6,13 @@ public class AudioManager : MonoBehaviour
 {
     public AudioSource efxSource;                   //Drag a reference to the audio source which will play the sound effects.
     public AudioSource musicSource;                 //Drag a reference to the audio source which will play the music.
+    public AudioSource ambientSource1;
+    public AudioSource ambientSource2; 
     public static AudioManager instance = null;     //Allows other scripts to call functions from SoundManager.             
     public float lowPitchRange = .95f;              //The lowest a sound effect will be randomly pitched.
     public float highPitchRange = 1.05f;            //The highest a sound effect will be randomly pitched.
     [SerializeField] List<AudioClip> audioClips;
+
 
     void Awake()
     {
@@ -26,7 +29,10 @@ public class AudioManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-
+    //public void Quack()
+    //{
+    //    PlaySingle(Quacks[Random.Range(0, Quacks.Count)]);
+    //}
     //Used to play single sound clips.
     public void PlaySingle(AudioClip clip)
     {
@@ -35,6 +41,44 @@ public class AudioManager : MonoBehaviour
 
         //Play the clip.
         efxSource.PlayOneShot(clip);
+    }
+
+    public void PlayAmbiance(string biome)
+    {
+        AudioSource sourceAvailable;
+        if (ambientSource1.isPlaying)
+        {
+            Debug.Log("fade out audiosource 1");
+            StartCoroutine(FadeOut(ambientSource1, 0.9f));
+            sourceAvailable = ambientSource2;
+        }
+        else
+        {
+            Debug.Log("fade out audiosource 2");
+            StartCoroutine(FadeOut(ambientSource2, 0.9f));
+            sourceAvailable = ambientSource1;
+        }
+        
+        switch (biome)
+        {
+            case "Forest":
+                //ambientSource.clip;
+                break;
+            case "Ocean":
+                sourceAvailable.clip = GetAudioClip("OceanWaves");
+                break;
+            case "Mountain":
+                sourceAvailable.clip = GetAudioClip("wind loop mountain");
+                break;
+            case "Desert":
+                sourceAvailable.clip = GetAudioClip("DesertSound");
+                break;
+            case "Lava":
+                sourceAvailable.clip = GetAudioClip("Lava Bubbles");
+                break;
+        }
+        Debug.Log("Playing Audio");
+        sourceAvailable.Play(); 
     }
 
     public void PlayLooped(AudioClip clip)
@@ -84,13 +128,13 @@ public class AudioManager : MonoBehaviour
         while (audioSource.volume > 0)
         {
             audioSource.volume -= startVolume * Time.deltaTime / FadeTime;
-
             yield return null;
         }
 
         audioSource.Stop();
         audioSource.volume = startVolume;
     }
+
 
 
     public AudioClip GetAudioClip(string name)

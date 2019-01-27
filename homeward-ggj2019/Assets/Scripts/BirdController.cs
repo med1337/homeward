@@ -210,7 +210,7 @@ public class BirdController : MonoBehaviour
         extraPower = 1;
         if (power > 100)
         {
-            extraPower = 3;
+            extraPower = 3; 
         }
         forceApplied = 1;
     }
