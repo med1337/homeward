@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class FlockManager : MonoBehaviour    
+public class FlockManager : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] public GameObject leader;
@@ -36,6 +36,7 @@ public class FlockManager : MonoBehaviour
     [SerializeField] float boostTimerMax = 3.0f;
     private bool boostOn = false;
 
+    public float speed;
 
     public static FlockManager Instance = null;
     private Vector3 startingPoint;
@@ -127,7 +128,7 @@ public class FlockManager : MonoBehaviour
     }
 
     void CheckGameOver()
-    {        
+    {
         if (flockMembers.Count < 1)
         {
             if (!leader)
@@ -138,7 +139,7 @@ public class FlockManager : MonoBehaviour
                 }
             }
         }
-    }   
+    }
 
     void SetOffsetPositions()
     {
@@ -166,7 +167,7 @@ public class FlockManager : MonoBehaviour
 
     void Avoid()
     {
-        foreach(GameObject birds in flockMembers)
+        foreach (GameObject birds in flockMembers)
         {
             foreach (GameObject bird in flockMembers)
             {
@@ -185,15 +186,19 @@ public class FlockManager : MonoBehaviour
 
     void Seek()
     {
+        speed = flightSpeed + distanceTravelled / 10;
         if (leader)
         {
+            if (leader.GetComponent<FlockMember>().GetSpeed() != speed)
+            {
+                leader.GetComponent<FlockMember>().SetSpeed(speed);
+            }
             UpdateOffsetPositions();
 
             for (int j = 0; j < flockMembers.Count; j++)
             {
                 FlockMember bird = flockMembers[j].GetComponent<FlockMember>();
-
-                var spd = flightSpeed + distanceTravelled / 10;
+                
                 //Debug.Log(spd);
                 if (bird.GetSpeed() != flightSpeed)
                 {
@@ -218,7 +223,7 @@ public class FlockManager : MonoBehaviour
                 }
             }
 
-            
+
             Vector3 leaderTargetPos = leader.transform.position;
             leaderTargetPos.y = flyingHeight;
 
@@ -230,7 +235,7 @@ public class FlockManager : MonoBehaviour
                 }
                 else
                 {
-                    leader.GetComponent<Rigidbody>().AddForce(-transform.up * 5 *  (seekStrength * 2));
+                    leader.GetComponent<Rigidbody>().AddForce(-transform.up * 5 * (seekStrength * 2));
                 }
             }
 
@@ -249,7 +254,7 @@ public class FlockManager : MonoBehaviour
 
         for (int i = 0; i < flockMembers.Count; i++)
         {
-            Vector3 offset = leader.transform.position;            
+            Vector3 offset = leader.transform.position;
 
             if (!(i % 2 == 0))
             {
@@ -287,7 +292,7 @@ public class FlockManager : MonoBehaviour
         }
 
         camShake.ShakeCam(0.2f, 0.5f);
-    }    
+    }
 
     public void AddNewFlockMember(GameObject _bird)
     {
@@ -340,6 +345,6 @@ public class FlockManager : MonoBehaviour
             bird.GetComponent<FlockMember>().SetInvunerable(false);
         }
 
-        flightSpeed / -2;
+        flightSpeed /= 2;
     }
 }

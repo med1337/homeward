@@ -47,16 +47,16 @@ public class Biome : MonoBehaviour
                     FlockManager.Instance.SetFlyingHeight(10f);
                     break;
                 case BiomeType.LAKE:
-                    FlockManager.Instance.SetFlyingHeight(4.5f);
+                    FlockManager.Instance.SetFlyingHeight(4f);
                     break;
                 case BiomeType.DESERT:
-                    FlockManager.Instance.SetFlyingHeight(4.5f);
+                    FlockManager.Instance.SetFlyingHeight(4f);
                     break;
                 case BiomeType.VOLCANO:
-                    FlockManager.Instance.SetFlyingHeight(4.5f);
+                    FlockManager.Instance.SetFlyingHeight(4f);
                     break;
                 case BiomeType.MOUNTAIN:
-                    FlockManager.Instance.SetFlyingHeight(4.5f);
+                    FlockManager.Instance.SetFlyingHeight(14f);
                     break;
                 case BiomeType.SNOW:
                     FlockManager.Instance.SetFlyingHeight(15f);
@@ -83,7 +83,7 @@ public class Biome : MonoBehaviour
 
         }
 
-        var chance = 100 + PlaneSpawner.Instance.Level * PlaneSpawner.Instance.Level * PlaneSpawner.Instance.Level;
+        var chance = 10 + FlockManager.Instance.speed;
         //PlaneSpawner.Instance.SpawnBiome();
 
         foreach (var row in Rows)
@@ -142,6 +142,8 @@ public class Biome : MonoBehaviour
                             case BiomeType.VOLCANO:
                                 break;
                             case BiomeType.MOUNTAIN:
+                                tree.SpawnRandomGameObject(BiomeType, 1);
+                                foliage.SpawnRandomGameObject(BiomeType, 3);
                                 break;
                             case BiomeType.SNOW:
                                 tree.density = 0.01f;
