@@ -1,12 +1,19 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Row : MonoBehaviour
 {
     public List<GameObject> gameObjects = new List<GameObject>();
-
+    public List<Tile> barrierTiles = new List<Tile>();
+    public List<Tile> obstacleTiles = new List<Tile>();
     private BiomeType biomeType = BiomeType.NONE;
+
+    public int index;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -32,7 +39,7 @@ public class Row : MonoBehaviour
 
     private IEnumerator DisableRow(Transform other)
     {
-        //PlaneSpawner.Instance.SpawnRow();
+        PlaneSpawner.Instance.SpawnRow(index);
         while (Vector3.Distance(other.position, transform.position)<70f)
         {
             yield return new WaitForSeconds(1f);
@@ -52,7 +59,7 @@ public class Row : MonoBehaviour
             go.GetComponent<Tile>().Init(biomeType);
             if (Mathf.Abs(i) >= (width - 5) / 2)
             {
-                go.GetComponent<BarrierSpawner>().Populate(biomeType);
+                barrierTiles.Add(go.GetComponent<Tile>());
             }
             else
             {
@@ -61,6 +68,80 @@ public class Row : MonoBehaviour
             }
             go.transform.position += transform.right * 10f * i;
             //go.transform.position += transform.forward * 10f * tilePrefab.transform.localScale.z * rowCounter;
+        }
+    }
+
+
+    public void SpawnStuff()
+    {
+        //barriers
+        foreach (var barrierTile in barrierTiles)
+        {
+            barrierTile.GetComponent<BarrierSpawner>().SpawnRandomGameObject(biomeType);
+        }
+
+        //obstacles
+        var chance = 10 + FlockManager.Instance.speed;
+        var rnd = Random.Range(0, 100);
+        if (rnd < chance)
+        {
+            var rndIndex = Random.Range(0, obstacleTiles.Count);
+            obstacleTiles[rndIndex].GetComponent<ObstacleSpawner>().SpawnRandomGameObject(biomeType);
+        }
+
+        foreach (var obstacleTile in obstacleTiles)
+        {
+            rnd = Random.Range(0, 100);
+            if (rnd < chance)
+            {
+                var tree = obstacleTile.GetComponent<TreeSpawner>();
+                var foliage = obstacleTile.GetComponent<Foliage2Spawner>();
+                switch (biomeType)
+                {
+                    case BiomeType.NONE:
+                        break;
+                    case BiomeType.MODERATE:
+                        //tile.density = 0.1f;
+                        tree.SpawnRandomGameObject(biomeType, 2);
+                        foliage.SpawnRandomGameObject(biomeType, 5);
+                        break;
+                    case BiomeType.LAKE:
+                        break;
+                    case BiomeType.DESERT:
+                        //tree.density = 1.5f;
+                        tree.SpawnRandomGameObject(biomeType, 1);
+                        break;
+                    case BiomeType.VOLCANO:
+                        break;
+                    case BiomeType.MOUNTAIN:
+                        tree.SpawnRandomGameObject(biomeType, 1);
+                        foliage.SpawnRandomGameObject(biomeType, 3);
+                        break;
+                    case BiomeType.SNOW:
+                        //tree.density = 0.01f;
+                        tree.SpawnRandomGameObject(biomeType, 2);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+        //other shit
+        
+
+    }
+
+
+    public void ScanNeighbours()
+    {
+        foreach (var o in gameObjects)
+        {
+            var tile = o.GetComponent<Tile>();
+            tile.ScanNeighbours();
+            if (tile.emptyNeightbours >= 2)
+            {
+                obstacleTiles.Add(tile);
+            }
         }
     }
 }

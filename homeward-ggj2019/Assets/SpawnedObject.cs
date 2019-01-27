@@ -36,7 +36,7 @@ public class SpawnedObject : MonoBehaviour
 
         if (RandomScale)
             transform.localScale = transform.localScale * Random.Range(minScale, maxScale);
-        OnSpawn();
+        //OnSpawn();
     }
 
     private IEnumerator WaitForFinish()
@@ -50,78 +50,78 @@ public class SpawnedObject : MonoBehaviour
     }
 
 
-    public void PlaySound()
-    {
-       // if (audioSource)
-            //SoundManager.instance.PlaySingleAtSource(audioSource, spawnAudioClip);
-    }
+    //public void PlaySound()
+    //{
+    //   // if (audioSource)
+    //        //SoundManager.instance.PlaySingleAtSource(audioSource, spawnAudioClip);
+    //}
 
-    public virtual void OnSpawn()
-    {
-        //animator.SetBool(boolName, true);
-        StartCoroutine(WaitForFinish());
-        if (audioSource)
-        {
-            PlaySound();
+    //public virtual void OnSpawn()
+    //{
+    //    //animator.SetBool(boolName, true);
+    //    StartCoroutine(WaitForFinish());
+    //    if (audioSource)
+    //    {
+    //        PlaySound();
 
-        }
-        else
-        {
-            //SoundManager.instance.PlaySingle(spawnAudioClip);
-        }
-        if (spawnParticleSystem != null)
-            spawnParticleSystem.Play();
-    }
+    //    }
+    //    else
+    //    {
+    //        //SoundManager.instance.PlaySingle(spawnAudioClip);
+    //    }
+    //    if (spawnParticleSystem != null)
+    //        spawnParticleSystem.Play();
+    //}
 
-    public virtual void OnDeath()
-    {
-        //if (audioSource != null && deathAudioClip != null)
-        //{
-        //    SoundManager.instance.PlaySingleAtSource(audioSource, deathAudioClip);
-        //}
-        if (deathParticleSystem != null)
-            deathParticleSystem.Play();
-        Destroy(gameObject, 1f);
-    }
+    //public virtual void OnDeath()
+    //{
+    //    //if (audioSource != null && deathAudioClip != null)
+    //    //{
+    //    //    SoundManager.instance.PlaySingleAtSource(audioSource, deathAudioClip);
+    //    //}
+    //    if (deathParticleSystem != null)
+    //        deathParticleSystem.Play();
+    //    Destroy(gameObject, 1f);
+    //}
 
-    public virtual void OnUpdate()
-    {
-        if (spawnParticleSystem != null && mr != null)
-        {
-            if (!mr.isVisible && spawnParticleSystem.isPlaying)
-            {
-                spawnParticleSystem.Stop();
-            }
-        }
+    //public virtual void OnUpdate()
+    //{
+    //    if (spawnParticleSystem != null && mr != null)
+    //    {
+    //        if (!mr.isVisible && spawnParticleSystem.isPlaying)
+    //        {
+    //            spawnParticleSystem.Stop();
+    //        }
+    //    }
 
-    }
+    //}
 
-    public virtual void OnFixedUpdate()
-    {
+    //public virtual void OnFixedUpdate()
+    //{
 
-    }
+    //}
 
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (AnimationFinished)
-            OnUpdate();
-    }
+    //// Update is called once per frame
+    //void Update()
+    //{
+    //    if (AnimationFinished)
+    //        OnUpdate();
+    //}
 
-    void FixedUpdate()
-    {
-        OnFixedUpdate();
-    }
+    //void FixedUpdate()
+    //{
+    //    OnFixedUpdate();
+    //}
 
-    private void OnCollisionEnter(Collision collision)
-    {
+    //private void OnCollisionEnter(Collision collision)
+    //{
 
-        if (((1 << collision.gameObject.layer) & dieOnContactWith) != 0)
-        {
-            //It matched layer
-            OnDeath();
-        }
+    //    if (((1 << collision.gameObject.layer) & dieOnContactWith) != 0)
+    //    {
+    //        //It matched layer
+    //        OnDeath();
+    //    }
 
-    }
+   // }
 }
