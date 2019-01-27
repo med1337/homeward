@@ -27,7 +27,7 @@ public class Spawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       
+
     }
 
 
@@ -39,29 +39,29 @@ public class Spawner : MonoBehaviour
         if (PrefabPerBiome[index].Prefabs.Length == 0) return;
         var go = PrefabPerBiome[index].Prefabs[Random.Range(0, PrefabPerBiome[index].Prefabs.Length)];
 
-        Destroy( parentToSpawn.GetChild(0).gameObject);
+        Destroy(parentToSpawn.GetChild(0).gameObject);
         var ground = Instantiate(go, parentToSpawn);
-        ground.transform.localPosition=Vector3.zero;
-        ground.transform.localScale = new Vector3(510f,510f,510f);
-        ground.transform.rotation = Quaternion.Euler(-90,0,0);
+        ground.transform.localPosition = Vector3.zero;
+        ground.transform.localScale = new Vector3(510f, 510f, 510f);
+        ground.transform.rotation = Quaternion.Euler(-90, 0, 0);
 
     }
 
-    public void SpawnRandomGameObject(BiomeType biomeType)
+    public void SpawnRandomGameObject(BiomeType biomeType, int failLimit = 0)
     {
         int index = (int)biomeType - 1;
 
-        if (PrefabPerBiome[index] == null || PrefabPerBiome[index].Prefabs ==null) return;
-        if(PrefabPerBiome[index].Prefabs.Length==0) return;
+        if (PrefabPerBiome[index] == null || PrefabPerBiome[index].Prefabs == null) return;
+        if (PrefabPerBiome[index].Prefabs.Length == 0) return;
         var go = PrefabPerBiome[index].Prefabs[Random.Range(0, PrefabPerBiome[index].Prefabs.Length)];
-        StartCoroutine(Spawn(go));
+        StartCoroutine(Spawn(go, failLimit));
     }
 
 
-    IEnumerator Spawn(GameObject prefab, bool maximum = false, int failLimit = 1)
+    IEnumerator Spawn(GameObject prefab, int failLimit = 0)
     {
         int failCounter = 0;
-        while (failCounter != failLimit)
+        do
         {
             var position = Vector3.zero;
 
@@ -86,13 +86,23 @@ public class Spawner : MonoBehaviour
             var so = prefab.GetComponent<SpawnedObject>();
 
             //cast a ray and check 
-            RaycastHit[] hits = Physics.SphereCastAll(new Ray(position, new Vector3(1, 1, 1)), so.radius);
+            RaycastHit[] hits = Physics.SphereCastAll(new Ray(position, new Vector3(1, 1, 1)), so.radius  );
             foreach (var item in hits)
             {
                 if (item.collider.gameObject.layer == prefab.gameObject.layer)
                 {
+
                     failCounter++;
-                    yield break;
+                    if (failLimit == 0)
+                    {
+                        yield break;
+                    }
+                    else if (failCounter == failLimit)
+                    {
+
+                        yield break;
+                    }
+                    yield return null;
                 }
 
             }
@@ -102,8 +112,9 @@ public class Spawner : MonoBehaviour
             go.transform.position = position;
 
             yield return new WaitForEndOfFrame();
-        }
-        
+        } while (failCounter != failLimit);
+
+
         ////go.transform.localScale = go.transform.localScale * Random.Range(0.6f, 1.6f);
         ////if (currentTile)
         ////    go.GetComponent<SpawnedObject>().audioSource = currentTile.audioSource;

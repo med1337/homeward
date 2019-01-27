@@ -64,7 +64,7 @@ public class PlaneSpawner : MonoBehaviour
     {
         Level++;
         biomCounter++;
-        if (Level == 6)
+        if (Level == 7)
         {
             Level = 1;
         }

@@ -38,7 +38,8 @@ public class FlockManager : MonoBehaviour
 
 
     public static FlockManager Instance = null;
-
+    private Vector3 startingPoint;
+    public float distanceTravelled = 0.0f;
 
     //Awake is always called before any Start functions
     void Awake()
@@ -62,6 +63,7 @@ public class FlockManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        startingPoint = leader.transform.position;
         SetOffsetPositions();
     }
 
@@ -69,7 +71,12 @@ public class FlockManager : MonoBehaviour
     void Update()
     {
         CheckGameOver();
+        if (leader)
+        {
+            distanceTravelled += (leader.transform.position.z - startingPoint.z);
+            startingPoint = leader.transform.position;
 
+        }
         Avoid();
 
         UpdateTimers();

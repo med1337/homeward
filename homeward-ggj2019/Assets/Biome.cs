@@ -36,6 +36,26 @@ public class Biome : MonoBehaviour
         if (comp)
         {
             PlaneSpawner.Instance.PopulateNextBiome();
+            switch (BiomeType)
+            {
+                case BiomeType.NONE:
+                    break;
+                case BiomeType.MODERATE:
+                    FlockManager.Instance.SetFlyingHeight(10f);
+                    break;
+                case BiomeType.LAKE:
+                    FlockManager.Instance.SetFlyingHeight(4.5f);
+                    break;
+                case BiomeType.DESERT:
+                    FlockManager.Instance.SetFlyingHeight(4.5f);
+                    break;
+                case BiomeType.VOLCANO:
+                    FlockManager.Instance.SetFlyingHeight(4.5f);
+                    break;
+                case BiomeType.MOUNTAIN:
+                    FlockManager.Instance.SetFlyingHeight(4.5f);
+                    break;
+            }
         }
 
     }
@@ -57,7 +77,7 @@ public class Biome : MonoBehaviour
 
         }
 
-
+        var chance = 25 + PlaneSpawner.Instance.Level * PlaneSpawner.Instance.Level * PlaneSpawner.Instance.Level;
         //PlaneSpawner.Instance.SpawnBiome();
 
         foreach (var row in Rows)
@@ -73,7 +93,7 @@ public class Biome : MonoBehaviour
             }
         }
 
-        var chance = 25 + PlaneSpawner.Instance.Level * PlaneSpawner.Instance.Level;
+
         for (int i = 0; i < 12; i++)
         {
             var rnd = Random.Range(0, 100);
@@ -91,8 +111,32 @@ public class Biome : MonoBehaviour
 
             foreach (var rowGameObject in row.gameObjects)
             {
-                var tile = rowGameObject.GetComponent<TreeSpawner>();
-                tile.SpawnRandomGameObject(BiomeType);
+                var rnd = Random.Range(0, 100);
+                if (rnd < chance)
+                {
+                    var tile = rowGameObject.GetComponent<TreeSpawner>();
+                    switch (BiomeType)
+                    {
+                        case BiomeType.NONE:
+                            break;
+                        case BiomeType.MODERATE:
+                            tile.density = 0.1f;
+                            break;
+                        case BiomeType.LAKE:
+                            break;
+                        case BiomeType.DESERT:
+                            tile.density = 1f;
+                            break;
+                        case BiomeType.VOLCANO:
+                            break;
+                        case BiomeType.MOUNTAIN:
+                            tile.density = 0.4f;
+                            break;
+                    }
+                    tile.SpawnRandomGameObject(BiomeType, 1);
+                }
+
+
             }
         }
     }
