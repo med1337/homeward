@@ -70,6 +70,10 @@ public class FlockMember : MonoBehaviour
 
             if (!col.transform.GetComponent<FlockMember>())
             {
+                AudioManager.instance.PlaySingle(BirbDeathSounds[1]);
+                AudioManager.instance.PlaySingle(BirbSounds[Random.Range(0, BirbSounds.Length)]);
+                AudioManager.instance.PlaySingle(BirbDeathSounds[0]);
+
                 Instantiate(deathExplosionPrefab, transform.position, transform.rotation);
 
                 BirdController controller = GetComponent<BirdController>();
@@ -84,9 +88,7 @@ public class FlockMember : MonoBehaviour
                 {
                     manager.RemoveFlockMember(this.gameObject);
                 }
-                AudioManagerRef.GetComponent<AudioManager>().PlaySingle(BirbDeathSounds[1]);
-                AudioManagerRef.GetComponent<AudioManager>().PlaySingle(BirbSounds[Random.Range(0, BirbSounds.Length)]);
-                AudioManagerRef.GetComponent<AudioManager>().PlaySingle(BirbDeathSounds[0]);
+
                 Destroy(this.gameObject);            
             }
             else
