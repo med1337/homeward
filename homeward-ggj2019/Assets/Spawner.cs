@@ -15,6 +15,7 @@ public class Spawner : MonoBehaviour
     [Range(0.01f, 0.99f)] public float density;
     public MeshCollider SpawnAreaCollider;
     public Transform parentToSpawn;
+    public float rotation = 0.0f;
 
     [Header("GRASS, LAKE, DESERT, VOLCANO, MOUNTAIN")]
     public PrefabList[] PrefabPerBiome;
@@ -43,7 +44,7 @@ public class Spawner : MonoBehaviour
         var ground = Instantiate(go, parentToSpawn);
         ground.transform.localPosition = Vector3.zero;
         ground.transform.localScale = new Vector3(510f, 510f, 510f);
-        ground.transform.rotation = Quaternion.Euler(-90, 0, 0);
+        ground.transform.rotation = Quaternion.Euler(-90, 0, rotation);
 
     }
 

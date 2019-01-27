@@ -74,6 +74,16 @@ public class Row : MonoBehaviour
 
     public void SpawnStuff()
     {
+        if (index == 14)
+        {
+            foreach (var obstacleTile in obstacleTiles)
+            {
+
+                var transitionGroundSpawner = obstacleTile.GetComponent<TransitionGroundSpawner>();
+                transitionGroundSpawner.ReplaceGround(biomeType);
+            }
+        }
+
         //barriers
         foreach (var barrierTile in barrierTiles)
         {
