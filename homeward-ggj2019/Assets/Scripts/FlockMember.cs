@@ -132,6 +132,11 @@ public class FlockMember : MonoBehaviour
     {
         manager = _manager;
         manager.AddNewFlockMember(this.gameObject);
+
+        if (transform.Find("Sparkles"))
+        {
+            Destroy(transform.Find("Sparkles").gameObject);
+        }
     }
     public void SetInvunerable(bool _in)
     {

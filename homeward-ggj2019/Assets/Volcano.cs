@@ -6,6 +6,7 @@ public class Volcano : MonoBehaviour
 {
     private Vector3 mouthPos;
 
+    [SerializeField] private Transform startPos;
     [SerializeField] GameObject rockPrefab;
 
     [SerializeField] float rockSpeed = 1.0f;
@@ -17,7 +18,7 @@ public class Volcano : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        mouthPos = transform.position;
+        mouthPos = startPos.position;
         mouthPos.y += 1.0f;
     }
 
@@ -43,6 +44,6 @@ public class Volcano : MonoBehaviour
         dir.x += Random.Range(-0.5f, 0.5f);
         dir.z += Random.Range(-0.5f, 0.5f);
 
-        rock.GetComponent<Rigidbody>().AddForce(dir * rockSpeed, ForceMode.Impulse);
+        rock.GetComponent<Rigidbody>().AddForce(dir * rockSpeed * Random.Range(0.8f, 1.2f), ForceMode.Impulse);
     }
 }
