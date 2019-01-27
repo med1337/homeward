@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 4cfb579feb7260e4c95689f3273f8045
+guid: ebb49a5d65f63984e826f396a6a0161b
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
@@ -9,8 +9,18 @@ ModelImporter:
     2100002: 04 - Default
     2300000: //RootNode
     3300000: //RootNode
-    4300000: Terrain.036
-  externalObjects: {}
+    4300000: Terrain.035
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 03 - Default
+    second: {fileID: 2100000, guid: abeaeaa04e1519c469f30df4d03e9534, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 04 - Default
+    second: {fileID: 2100000, guid: 80ced19cdadbcaf45bc3184e203bb1ce, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
