@@ -328,7 +328,7 @@ public class FlockManager : MonoBehaviour
     public void EnableBoost()
     {
         camShake.ShakeCam(boostTimerMax, 0.3f);
-
+        AudioManager.instance.PlaySingle("WindLoopShort");
         //foreach(GameObject bird in flockMembers)
         //{
         //    bird.GetComponent<FlockMember>().SetInvunerable(true);

@@ -14,6 +14,10 @@ public class GameplayManager : MonoBehaviour
             transform.GetComponent<AudioSource>().enabled = false;
         else
             transform.GetComponent<AudioSource>().enabled = true;
+
+        AudioManager.instance.ambientSource1.Stop();
+        AudioManager.instance.ambientSource2.Stop();
+
     }
 
     // Update is called once per frame

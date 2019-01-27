@@ -144,15 +144,19 @@ public class PlaneSpawner : MonoBehaviour
                     break;
                 case BiomeType.LAKE:
                     FlockManager.Instance.SetFlyingHeight(4f);
+                    AudioManager.instance.PlayAmbiance("Ocean"); 
                     break;
                 case BiomeType.DESERT:
                     FlockManager.Instance.SetFlyingHeight(4f);
+                    AudioManager.instance.PlayAmbiance("Desert");
                     break;
                 case BiomeType.VOLCANO:
                     FlockManager.Instance.SetFlyingHeight(4f);
+                    AudioManager.instance.PlayAmbiance("Lava");
                     break;
                 case BiomeType.MOUNTAIN:
                     FlockManager.Instance.SetFlyingHeight(14f);
+                    AudioManager.instance.PlayAmbiance("Mountain");
                     break;
                 case BiomeType.SNOW:
                     FlockManager.Instance.SetFlyingHeight(15f);
