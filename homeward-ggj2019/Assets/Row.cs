@@ -91,7 +91,7 @@ public class Row : MonoBehaviour
         }
 
         //obstacles
-        var chance = 100 + FlockManager.Instance.speed;
+        var chance = 25 + FlockManager.Instance.speed;
         var rnd = Random.Range(0, 100);
         if (rnd < chance)
         {
@@ -115,6 +115,7 @@ public class Row : MonoBehaviour
                         tree.SpawnRandomGameObject(biomeType, 2);
                         break;
                     case BiomeType.LAKE:
+                        tree.SpawnRandomGameObject(biomeType, 1);
                         break;
                     case BiomeType.DESERT:
                         //tree.density = 1.5f;
