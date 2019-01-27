@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class BirdController : MonoBehaviour
 {
+/*
     public float EdgeDistance = 5;
+*/
     public float TurnRotation = 60;
+/*
     public int Responsiveness = 2;
-    public int speed = 10;
+*/
     float forceApplied = 0;
     int moveForce = 0;
     int prevMoveForce = 0;
@@ -17,7 +20,7 @@ public class BirdController : MonoBehaviour
     private Vector2 fingerUpPosition;
     private Vector2 fingerDownPosition;
     public float extraPower = 1.0f;
-    public float desiredX = 0.0f;
+
 
     private void Start()
     {
@@ -184,12 +187,12 @@ public class BirdController : MonoBehaviour
     //////////////////////////////////CALLBACK FUNCTIONS/////////////////////////////
     void OnSwipeUp()
     {
-        Debug.Log("Swipe UP");
+        //Debug.Log("Swipe UP");
     }
 
     void OnSwipeDown()
     {
-        Debug.Log("Swipe Down");
+        //Debug.Log("Swipe Down");
     }
 
     void OnSwipeLeft(float power)
