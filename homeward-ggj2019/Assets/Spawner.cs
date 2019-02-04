@@ -103,7 +103,7 @@ public class Spawner : MonoBehaviour
 
                         yield break;
                     }
-                        yield return new WaitForEndOfFrame(); ;
+                        yield return new WaitForSeconds(0.05f); ;
                 }
 
             }
@@ -112,7 +112,7 @@ public class Spawner : MonoBehaviour
             var go = Instantiate(prefab, transform);
             go.transform.position = position;
 
-            yield return new WaitForEndOfFrame();
+            yield return new WaitForSeconds(0.05f);
         } while (failCounter != failLimit);
 
 

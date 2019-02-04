@@ -43,7 +43,7 @@ public class SpawnedObject : MonoBehaviour
     {
         while (!AnimationFinished)
         {
-            yield return new WaitForEndOfFrame();
+            yield return new WaitForSeconds(0.05f);
         }
         animator.enabled = false;
         transform.localScale = desiredScale;

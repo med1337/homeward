@@ -42,7 +42,7 @@ public class Row : MonoBehaviour
         PlaneSpawner.Instance.SpawnRow(index);
         while (Vector3.Distance(other.position, transform.position)<70f)
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(5f);
         }
         Destroy(gameObject);
         //gameObject.SetActive(false);
@@ -50,6 +50,11 @@ public class Row : MonoBehaviour
 
 
     public void SpawnTiles(int width, GameObject tilePrefab, BiomeType _biomeType)
+    {
+        StartCoroutine(Spawn(width, tilePrefab, _biomeType));
+    }
+
+    public IEnumerator Spawn(int width, GameObject tilePrefab, BiomeType _biomeType)
     {
         biomeType = _biomeType;
         for (int i = -width / 2; i <= width / 2; i++)
@@ -67,18 +72,23 @@ public class Row : MonoBehaviour
 
             }
             go.transform.position += transform.right * 10f * i;
-            //go.transform.position += transform.forward * 10f * tilePrefab.transform.localScale.z * rowCounter;
+            yield return new WaitForSeconds(0.05f);
         }
     }
 
-
     public void SpawnStuff()
+    {
+        StartCoroutine(SpawnStuffCR());
+
+
+    }
+
+    private IEnumerator SpawnStuffCR()
     {
         if (index == 14)
         {
             foreach (var obstacleTile in obstacleTiles)
             {
-
                 var transitionGroundSpawner = obstacleTile.GetComponent<TransitionGroundSpawner>();
                 transitionGroundSpawner.ReplaceGround(biomeType);
             }
@@ -91,12 +101,13 @@ public class Row : MonoBehaviour
         }
 
         //obstacles
-        var chance = 25 + FlockManager.Instance.speed;
+        var chance = FlockManager.Instance.speed;
         var rnd = Random.Range(0, 100);
         if (rnd < chance)
         {
             var rndIndex = Random.Range(0, obstacleTiles.Count);
-            obstacleTiles[rndIndex].GetComponent<ObstacleSpawner>().SpawnRandomGameObject(biomeType);
+            if(rndIndex<obstacleTiles.Count)
+                obstacleTiles[rndIndex].GetComponent<ObstacleSpawner>().SpawnRandomGameObject(biomeType);
         }
 
         foreach (var obstacleTile in obstacleTiles)
@@ -159,10 +170,10 @@ public class Row : MonoBehaviour
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            yield return new WaitForSeconds(0.05f);
         }
         //other shit
-        
-
     }
 
 

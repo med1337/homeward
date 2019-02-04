@@ -313,7 +313,7 @@ public class FoliageSpawner : MonoBehaviour
         go.transform.position = position;
         //var randomY = Random.Range(0f, 180f);
         //go.transform.Rotate(Vector3.up,randomY);
-        yield return new WaitForEndOfFrame();
+        yield return new WaitForSeconds(0.05f);
         //go.transform.localScale = go.transform.localScale * Random.Range(0.6f, 1.6f);
         //if (currentTile)
         //    go.GetComponent<SpawnedObject>().audioSource = currentTile.audioSource;
