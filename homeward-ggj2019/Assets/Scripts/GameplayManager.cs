@@ -14,7 +14,7 @@ public class GameplayManager : MonoBehaviour
             transform.GetComponent<AudioSource>().enabled = false;
         else
             transform.GetComponent<AudioSource>().enabled = true;
-
+        Application.targetFrameRate = 60;
         AudioManager.instance.ambientSource1.Stop();
         AudioManager.instance.ambientSource2.Stop();
 
