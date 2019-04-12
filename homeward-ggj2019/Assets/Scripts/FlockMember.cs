@@ -15,6 +15,7 @@ public class FlockMember : MonoBehaviour
     public AudioClip[] BirbSounds;
     public AudioClip[] BirbDeathSounds; 
     private bool invunerable = false;
+	[SerializeField] GameObject addedToFlockParticle;
 
     private float quackTime;
     // Start is called before the first frame update
